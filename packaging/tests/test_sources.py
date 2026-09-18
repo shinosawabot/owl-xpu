@@ -30,7 +30,7 @@ class SourceAdmissionTests(unittest.TestCase):
         init(self.root)
         (self.root / "README.md").write_text("fixture\n")
         (self.root / ".gitignore").write_text("dist/\n")
-        for name in BUILD.COMPONENTS.values():
+        for name in BUILD.SOURCES.values():
             source = base / name
             init(source)
             (source / "runtime.txt").write_text(name + "\n")
@@ -44,7 +44,7 @@ class SourceAdmissionTests(unittest.TestCase):
         (self.root / "dist").mkdir()
         (self.root / "dist" / "old.whl").write_text("ignored output")
         receipt = BUILD.inspect_sources(self.root)
-        self.assertEqual(set(receipt["components"]), set(BUILD.COMPONENTS))
+        self.assertEqual(set(receipt["components"]), set(BUILD.SOURCES))
         for item in receipt["components"].values():
             self.assertEqual(item["revision"], git(self.root / item["path"], "rev-parse", "HEAD"))
 

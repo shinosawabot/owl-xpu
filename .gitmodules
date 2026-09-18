@@ -10,3 +10,6 @@
 [submodule "components/comfy-aimdo"]
 	path = components/comfy-aimdo
 	url = https://github.com/shinosawabot/comfy-aimdo.git
+[submodule "components/ComfyUI"]
+	path = components/ComfyUI
+	url = https://github.com/Comfy-Org/ComfyUI.git

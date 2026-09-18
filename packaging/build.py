@@ -18,6 +18,7 @@ COMPONENTS = {
     "aimdo": "comfy-aimdo",
     "comfyui": "ComfyUI_OmniXPU",
 }
+SOURCES = {**COMPONENTS, "host": "ComfyUI"}
 
 
 def git(root: Path, *args: str) -> str:
@@ -35,12 +36,12 @@ def inspect_sources(root: Path = ROOT) -> dict:
         mode, kind, revision = metadata.split()
         entries[path] = (mode, kind, revision)
         if mode == "160000":
-            if path not in {"components/" + name for name in COMPONENTS.values()}:
+            if path not in {"components/" + name for name in SOURCES.values()}:
                 raise RuntimeError(f"Unexpected runtime submodule: {path}")
         elif path not in {"README.md", "LICENSE", ".gitignore", ".gitmodules", "AGENTS.md"} and not path.startswith(("docs/", "packaging/")):
             raise RuntimeError(f"Top-level ownership violation: {path}")
     result = {}
-    for key, name in COMPONENTS.items():
+    for key, name in SOURCES.items():
         path = "components/" + name
         entry = entries.get(path)
         if not entry or entry[:2] != ("160000", "commit"):
