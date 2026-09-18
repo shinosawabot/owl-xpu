@@ -58,6 +58,10 @@ See [packaging instructions](docs/packaging.md),
 
 ## Build from clean OMIX
 
+The current scripts target **Ubuntu x86-64**: the container uses Ubuntu 24.04,
+and the validated host runs Ubuntu 24.10. Other host distributions, Windows and
+macOS have not been validated with this recipe.
+
 No preinstalled Omni kernel or existing development image is required. With
 Docker and Python 3 on the host, from a clean checkout with all five direct submodules initialized:
 

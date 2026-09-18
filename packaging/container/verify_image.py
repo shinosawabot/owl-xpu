@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Verify a built image without downloading models or exposing host ports."""
+"""Verify the Ubuntu 24.04 image on an Ubuntu x86-64 host with Intel /dev/dri.
+
+Validated host: Ubuntu 24.10. No models are downloaded or host ports exposed.
+Other host operating systems are unvalidated.
+"""
 import argparse
 import importlib.util
 import json

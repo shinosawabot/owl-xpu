@@ -76,5 +76,7 @@
     "B580 only",
     "Conditional adapters may skip",
     "XPU AIMDO memory compiler unsupported"
-  ]
+  ],
+  "host_environment": "Ubuntu 24.10 x86-64",
+  "container_environment": "Ubuntu 24.04 x86-64"
 }

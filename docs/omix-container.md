@@ -1,5 +1,11 @@
 # Build and validate OWL from OMIX
 
+The current installation, compilation and verification scripts target **Ubuntu
+x86-64**. The OMIX container is based on **Ubuntu 24.04**; the host used for
+validation runs **Ubuntu 24.10**. The recipe uses Ubuntu/Intel apt repositories,
+Bash and Linux `/dev/dri` device access. Other Linux distributions, Windows and
+macOS are outside the currently validated environment.
+
 This recipe starts with the official OMIX development base, creates its own
 Python environment, compiles oneDNN and all OWL native components, and installs
 the resulting enhancement bundle into official ComfyUI 0.35.0. It does not use
@@ -39,7 +45,7 @@ without rebuilding and revalidating the combination.
 
 ## Host prerequisites and build
 
-Use Linux x86-64, Docker with BuildKit support, Python 3, Git, and network access
+Use an Ubuntu x86-64 host, Docker with BuildKit support, Python 3, Git, and network access
 to the Ubuntu/Intel repositories, PyPI, PyTorch's XPU index and public GitHub.
 Budget substantial disk space (the development toolchain image is large) and
 RAM for eight compiler jobs. No host Torch, oneAPI, Python venv or GPU access is

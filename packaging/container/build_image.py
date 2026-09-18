@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Build from OMIX using a clean, credential-free snapshot of committed gitlinks."""
+"""Build Ubuntu 24.04 OMIX on an Ubuntu x86-64 host from committed gitlinks.
+
+Validated host: Ubuntu 24.10. Other host operating systems are unvalidated.
+The build context is a clean, credential-free source snapshot.
+"""
 import argparse
 import importlib.util
 from pathlib import Path

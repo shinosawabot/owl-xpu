@@ -12,6 +12,8 @@ used in this build. A direct base-image probe confirmed `/opt/venv` was absent.
 - Verification scripts: `9dcdd18080e656bf4a18f8f3d4ebf840acdb6ecf`
 - Official ComfyUI: `40c4fcdf513a4523e39d54a9d391908af8df8171` (`0.35.0`)
 - Device: Intel Arc B580, PCI `0000:03:00.0`, device ID `0xe20b`
+- Host environment: Ubuntu 24.10 x86-64
+- Container environment: Ubuntu 24.04 x86-64 (OMIX development base)
 
 | Check | Result |
 | --- | --- |
