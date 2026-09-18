@@ -1,0 +1,12 @@
+[submodule "components/omni_xpu_kernels"]
+	path = components/omni_xpu_kernels
+	url = https://github.com/shinosawabot/omni_xpu_kernels.git
+[submodule "components/ComfyUI_OmniXPU"]
+	path = components/ComfyUI_OmniXPU
+	url = https://github.com/shinosawabot/ComfyUI_OmniXPU.git
+[submodule "components/comfy-kitchen"]
+	path = components/comfy-kitchen
+	url = https://github.com/shinosawabot/comfy-kitchen.git
+[submodule "components/comfy-aimdo"]
+	path = components/comfy-aimdo
+	url = https://github.com/shinosawabot/comfy-aimdo.git

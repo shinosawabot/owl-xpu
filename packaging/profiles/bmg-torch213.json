@@ -1,0 +1,9 @@
+{
+  "profile": "bmg-torch213",
+  "platform": "linux",
+  "xpu_target": "bmg",
+  "torch_version": "2.13.0+xpu",
+  "onednn_version": "2026.0.0",
+  "sycl_tla_revision": "2fc09973bfdf15755090fcb0e3b6ad236408a992",
+  "status": "development packaging recipe; not a validated combined release"
+}
