@@ -1,0 +1,80 @@
+{
+  "date": "2026-09-19",
+  "base_image": "intel/omix:0.3.0-devel-ubuntu24.04@sha256:53e2c4503beeea4aff906dea180933be672449bcf04eb38df3d89622a1cd0967",
+  "no_cache_build": true,
+  "base_probe": "/opt/venv absent in OMIX base",
+  "image_tag": "owl-xpu:comfyui-0.35.0-bmg",
+  "image_id": "sha256:63bff5fa9816c993ccbaaaeeb480aae44e8082b2e39b5b6bb7677abfe7603a15",
+  "image_size_bytes": 17827036175,
+  "result": {
+    "status": "passed",
+    "image": "owl-xpu:comfyui-0.35.0-bmg",
+    "pci": "0000:03:00.0",
+    "verification_revision": "9dcdd18080e656bf4a18f8f3d4ebf840acdb6ecf",
+    "build_revision": "e54284d1c482a746c3b19d287cc4f119315bf3af",
+    "checks": [
+      "36 native RMSNorm cases",
+      "DynamicVRAM enabled: both providers active",
+      "Kitchen INT8 exact reference and AIMDO VBAR hit/evict/refault",
+      "DynamicVRAM disabled: Kitchen active, AIMDO skipped",
+      "official ComfyUI 0.35.0 diagnostic workflow in both modes"
+    ],
+    "scope": "B580 packaging and model-free integration; no inference/performance claim"
+  },
+  "components": {
+    "kernels": {
+      "path": "components/omni_xpu_kernels",
+      "repository": "https://github.com/shinosawabot/omni_xpu_kernels.git",
+      "revision": "90356713b5f97d01e1353c8cc95fc830a23d0189"
+    },
+    "kitchen": {
+      "path": "components/comfy-kitchen",
+      "repository": "https://github.com/shinosawabot/comfy-kitchen.git",
+      "revision": "950214add9c4a9709117d2c50f33d04ce030e018"
+    },
+    "aimdo": {
+      "path": "components/comfy-aimdo",
+      "repository": "https://github.com/shinosawabot/comfy-aimdo.git",
+      "revision": "8b8c2db0894c4f459fb8b918335dc6dd044183d7"
+    },
+    "comfyui": {
+      "path": "components/ComfyUI_OmniXPU",
+      "repository": "https://github.com/shinosawabot/ComfyUI_OmniXPU.git",
+      "revision": "2057f1c9c25ed993e8267ca02ff41aeffd2b9573"
+    },
+    "host": {
+      "path": "components/ComfyUI",
+      "repository": "https://github.com/Comfy-Org/ComfyUI.git",
+      "revision": "40c4fcdf513a4523e39d54a9d391908af8df8171"
+    }
+  },
+  "artifacts": {
+    "wheels/aimdo/comfy_aimdo_xpu_runtime-0.5.3-cp39-abi3-linux_x86_64.whl": "58af0bd2d5c0d92c611b36f430e4721bf52f5e0b4db6e4781236cb5c15ac8dca",
+    "wheels/kernels/omni_xpu_kernel-0.2.0b2+torch213.bmg-cp312-cp312-linux_x86_64.whl": "4796196f9afacf615b3e485fd0df8102ece2e330045aaa43ebbc765ee34fc831",
+    "wheels/kitchen/comfy_kitchen_xpu_runtime-0.2.33-py3-none-any.whl": "ce75e8fa83deb3d674b1c15184a40615ad26f0aa820c8f50428024497792fc0b",
+    "ComfyUI_OmniXPU.zip": "d46f22017729a91c3b436b67226a27f08cddc7a86b9db78721fd6145daefbb3c"
+  },
+  "provider_state": {
+    "status": "active",
+    "mode": "required",
+    "providers": {
+      "comfy_kitchen.xpu": {
+        "status": "active",
+        "reason": ""
+      },
+      "comfy_aimdo.xpu": {
+        "status": "active",
+        "reason": ""
+      }
+    },
+    "errors": []
+  },
+  "allocator_mode": "native_hook",
+  "raw_evidence_directory": "/home/xiangyu/workspace/omni-local/owl-omix-clean",
+  "limits": [
+    "No model generation workflow or quality/performance claim",
+    "B580 only",
+    "Conditional adapters may skip",
+    "XPU AIMDO memory compiler unsupported"
+  ]
+}

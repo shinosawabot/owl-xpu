@@ -1,5 +1,9 @@
 # Linux development packaging
 
+For installation and compilation starting from a clean OMIX base, use the
+[container recipe](omix-container.md) and its [validation report](omix-validation.md).
+The instructions below cover enhancement-only builds in an existing toolchain.
+
 The initial profile is `packaging/profiles/bmg-torch213.json`: Torch
 `2.13.0+xpu`, oneDNN packages `2026.0.0`, target `bmg`, and sycl-tla commit
 `2fc09973bfdf15755090fcb0e3b6ad236408a992`. Use a prepared oneAPI development

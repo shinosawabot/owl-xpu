@@ -5,6 +5,9 @@ Python environment, compiles oneDNN and all OWL native components, and installs
 the resulting enhancement bundle into official ComfyUI 0.35.0. It does not use
 `omni-local:kernel-dev` or copy its prebuilt libraries.
 
+The first complete clean-build result is recorded in the
+[validation report](omix-validation.md).
+
 ## Inputs and upstream provenance
 
 The stable dependency stages and oneDNN patch in

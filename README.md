@@ -59,7 +59,7 @@ See [packaging instructions](docs/packaging.md),
 ## Build from clean OMIX
 
 No preinstalled Omni kernel or existing development image is required. With
-Docker and Python 3 on the host, from a clean recursive checkout:
+Docker and Python 3 on the host, from a clean checkout with all five direct submodules initialized:
 
 ```bash
 python3 packaging/container/build_image.py \
@@ -71,7 +71,7 @@ python3 packaging/container/verify_image.py \
 
 The device arguments above describe the tested local B580; confirm them for your
 host. See [the complete OMIX recipe](docs/omix-container.md) for prerequisites,
-build stages, launch/export commands, evidence and validation limits.
+build stages and launch/export commands. The [clean-build validation report](docs/omix-validation.md) records the tested image, checks and limits.
 
 ## Status
 
