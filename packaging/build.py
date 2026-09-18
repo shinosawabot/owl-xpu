@@ -7,6 +7,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import shutil
 import subprocess
 import sys
 
@@ -69,11 +70,28 @@ def only_wheel(directory: Path) -> Path:
     return wheels[0]
 
 
+def aimdo_build_environment(env: dict) -> dict:
+    """Resolve toolchain headers before starting any expensive native build."""
+    compiler = shutil.which(env.get("CXX", "icpx"), path=env.get("PATH"))
+    if compiler is None:
+        raise RuntimeError("AIMDO requires the oneAPI C++ compiler (CXX or icpx)")
+    include = Path(compiler).resolve().parent.parent / "include"
+    candidates = ([Path(env["UR_INCLUDE_DIR"])] if env.get("UR_INCLUDE_DIR") else
+                  [include / "unified-runtime", include,
+                   Path(sys.prefix) / "include" / "unified-runtime"])
+    for candidate in candidates:
+        if (candidate / "ur_api.h").is_file():
+            return dict(env, UR_INCLUDE_DIR=str(candidate))
+    raise RuntimeError("AIMDO requires ur_api.h; set UR_INCLUDE_DIR to its directory")
+
+
 def build(args: argparse.Namespace, plan: dict) -> None:
     profile = plan["profile"]
     if sys.platform != profile["platform"]:
         raise RuntimeError("This recipe currently supports Linux only")
     env = dict(os.environ, OMNI_XPU_DEVICE=profile["xpu_target"], OMNI_XPU_REQUIRE_CUTE="1")
+    if "aimdo" in args.components:
+        env = aimdo_build_environment(env)
     if set(args.components) != {"comfyui"}:
         probe = subprocess.check_output([sys.executable, "-c", "import torch; print(torch.__version__)"], text=True).strip()
         if probe != profile["torch_version"]:
@@ -105,10 +123,15 @@ def build(args: argparse.Namespace, plan: dict) -> None:
         run(["git", "checkout", "--detach", item["revision"]], cwd=work, env=env, log=log)
         if key == "aimdo":
             run(["bash", "scripts/build-linux-xpu.sh"], cwd=work, env=env, log=log)
+        wheel_env = env
+        if key == "aimdo":
+            # The co-installable provider must accept the official host version.
+            # Source identity is independently recorded in its hashed manifest.
+            wheel_env = dict(env, SETUPTOOLS_SCM_PRETEND_VERSION=profile["comfy_aimdo_version"])
         wheels = output / ("wheels" if key == "kernels" else "intermediate") / key
         wheels.mkdir(parents=True)
         run([sys.executable, "-m", "pip", "wheel", ".", "--no-deps", "--no-build-isolation",
-             "--no-cache-dir", "--wheel-dir", str(wheels)], cwd=work, env=env, log=log)
+             "--no-cache-dir", "--wheel-dir", str(wheels)], cwd=work, env=wheel_env, log=log)
         wheel = only_wheel(wheels)
         if key in {"kitchen", "aimdo"}:
             providers = output / "wheels" / key
