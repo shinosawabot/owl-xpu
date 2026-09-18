@@ -1,5 +1,10 @@
 # Official ComfyUI 0.35.0 enhancement validation
 
+This records the earlier prepared-development-image method. For the complete
+installation and compilation from an OMIX base, use
+[the current container recipe](omix-container.md). Official ComfyUI is now also
+pinned as a fifth submodule for that complete image.
+
 This recipe installs OWL's four pinned components into an **external, official
 ComfyUI checkout**. ComfyUI itself is a test fixture, not vendored into OWL or
 included in the enhancement ZIP. Runtime source ownership remains in submodules.

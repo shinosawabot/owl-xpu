@@ -14,6 +14,7 @@ moving branch or downloads an unpinned replacement implementation.
 
 | Submodule | Responsibility |
 | --- | --- |
+| [components/ComfyUI](https://github.com/Comfy-Org/ComfyUI) | Official ComfyUI host, pinned to v0.35.0 |
 | [components/omni_xpu_kernels](https://github.com/shinosawabot/omni_xpu_kernels) | Native Intel XPU kernels, Torch bindings and target capabilities |
 | [components/comfy-kitchen](https://github.com/shinosawabot/comfy-kitchen) | Operator APIs, XPU dispatch, input constraints and fallback |
 | [components/comfy-aimdo](https://github.com/shinosawabot/comfy-aimdo) | Memory management and allocator lifecycle |
@@ -21,8 +22,8 @@ moving branch or downloads an unpinned replacement implementation.
 
 ## Checkout
 
-All five repositories are private; the authenticated account needs read access
-to the superproject and all four component repositories.
+The OWL superproject and four enhancement repositories are private; the
+authenticated account needs read access to them. Official ComfyUI is public.
 
 ```bash
 git clone https://github.com/shinosawabot/owl-xpu.git
@@ -32,7 +33,7 @@ python3 packaging/build.py check
 python3 packaging/build.py plan
 ```
 
-Initialization intentionally covers the four direct submodules. Kitchen retains
+Initialization covers the five direct submodules. Kitchen retains
 optional upstream CUDA third-party submodules, which its XPU-only packaging path
 does not use. There is no need to download those for this recipe.
 
@@ -55,12 +56,29 @@ working trees remain unchanged. The command never uploads or publishes artifacts
 See [packaging instructions](docs/packaging.md),
 [architecture](docs/architecture.md), and [updating components](docs/development.md).
 
+## Build from clean OMIX
+
+No preinstalled Omni kernel or existing development image is required. With
+Docker and Python 3 on the host, from a clean recursive checkout:
+
+```bash
+python3 packaging/container/build_image.py \
+  --no-cache --work-dir /absolute/path/to/new-build-directory
+python3 packaging/container/verify_image.py \
+  --pci 0000:03:00.0 --ze-affinity 0 \
+  --output /absolute/path/to/new-validation-directory
+```
+
+The device arguments above describe the tested local B580; confirm them for your
+host. See [the complete OMIX recipe](docs/omix-container.md) for prerequisites,
+build stages, launch/export commands, evidence and validation limits.
+
 ## Status
 
-This is the initial submodule-based assembly and a BMG/Torch 2.13 development
-packaging recipe. Packaging success does not establish a validated combined
-runtime, installable full ComfyUI image, workflow benefit or support for another
-device. DG2/A770 and LNL remain directions inherited from the reference design;
+This is a submodule-based assembly and a BMG/Torch 2.13 development packaging
+recipe. Packaging and model-free smoke checks do not establish model inference
+correctness, workflow benefit or support for another device.
+DG2/A770 and LNL remain directions inherited from the reference design;
 each requires its own implementation and device validation.
 
 Architecture reference: `xiangyuT/owl-xpu@7ecf3402d87381aa7f8fb608840c1c6facd3695d`.

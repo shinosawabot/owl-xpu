@@ -2,6 +2,7 @@
 
 ```text
 OWL-XPU (documentation, gitlinks, packaging profiles and artifact manifests)
+  +-- ComfyUI: official application host (v0.35.0)
   +-- ComfyUI_OmniXPU: prestartup selection and ComfyUI-specific adapters
   +-- comfy-kitchen: common operator interfaces and per-call dispatch
   +-- comfy-aimdo: allocator and model-weight lifecycle
@@ -30,9 +31,10 @@ machine-specific device ordinals. `packaging/build.py check` enforces this layou
 Gitlinks are the only source-version authority; build manifests derive their
 component revisions from them rather than maintaining a second lock file.
 
-The existing ComfyUI host application and compiler/toolchain are prerequisites,
-not bundled applications in this initial recipe. If a future package includes
-another runtime project, add it as a reviewed, pinned submodule. sycl-tla is an
+The container recipe includes official ComfyUI through its pinned submodule and
+bootstraps the toolchain from OMIX. The enhancement-only recipe can still target
+an existing compatible ComfyUI installation. Any additional runtime project must
+likewise be a reviewed, pinned submodule. sycl-tla is an
 external build-time header checkout whose required commit is specified in the
 packaging profile and verified before a kernel build.
 
