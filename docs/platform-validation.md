@@ -53,7 +53,7 @@ No matrix row establishes complete model inference correctness or performance
 improvement. AIMDO's XPU memory compiler is unsupported; tested DynamicVRAM
 functionality concerns allocator accounting and model-weight residency. Every
 new OS/device row needs its own driver/runtime identity, wheel hashes, numerical
-checks, provider diagnostics and upgrade regression results before becoming V.
+checks, provider diagnostics and upgrade regression results before being marked ✅ Validated.
 
 ## ComfyUI upgrade requirement
 

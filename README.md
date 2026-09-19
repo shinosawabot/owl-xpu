@@ -25,25 +25,37 @@ moving branch or downloads an unpinned replacement implementation.
 Ubuntu uses the OMIX image build. The planned Windows route enhances the
 upstream Intel portable; an OWL Windows installer is not yet available.
 **Only Ubuntu + B580 with ComfyUI 0.35.0 has passed OWL device validation.**
-The table describes the current committed component pins (updated 2026-09-19).
+The tables describe the current committed component pins (updated 2026-09-19).
 
-Legend:
+Status indicators (always accompanied by text):
 
-- **V**: OWL device checks passed, limited to the scope in the linked receipt.
-- **C**: component code/build path exists; this OS/device combination is unvalidated.
-- **G**: provider metadata admits the target; this alone does not prove functionality.
-- **B**: missing target support in the current pins blocks the complete enhancement.
+- ✅ **Validated**: OWL device checks passed within the documented test scope.
+- 🧩 **Implementation present, unvalidated**: code/build path exists; this OS/device combination has not passed OWL validation.
+- 📋 **Target declared, unvalidated**: provider metadata admits the target; functionality is not yet established.
+- 🚫 **Missing target support / blocked**: the current component pins cannot provide the complete enhancement.
+- ⏳ **Planned / awaiting validation**: delivery or device validation is still pending.
 
-| OS | GPU / target | omni_xpu_kernels | Kitchen XPU provider | AIMDO XPU provider | ComfyUI_OmniXPU adapters | OWL package / combined validation |
-| --- | --- | --- | --- | --- | --- | --- |
-| Ubuntu | B580 / `bmg` | **V**, focused native cases; B580 policy remains experimental | **V**, 40 capabilities registered; INT8 reference case tested | **V**, native hook and VBAR lifecycle | **V**, registration and diagnostic graph; conditional adapters can skip | **V**, OMIX build and both DynamicVRAM modes |
-| Ubuntu | A770 / `dg2` | **B**, no `dg2` build target in current kernel pin | **G**, `dg2` accepted but requires a matching companion kernel | **G**, `dg2` manifest eligibility; device untested | **C**, generic XPU discovery; incomplete companion stack | Blocked on DG2 kernel path; no profile or receipt |
-| Ubuntu | PTL / `ptl-h` only | **C**, explicit `ptl-h` build path | **G**, `ptl-h` accepted | **G**, `ptl-h` accepted | **C**, target-dependent routes; device untested | No PTL OWL profile or receipt |
-| Ubuntu | LNL | **B**, no `lnl` build target | **B**, no `lnl` provider target | **B**, no `lnl` provider target | **C**, generic XPU discovery is not LNL acceptance | Blocked on target integration; no receipt |
-| Windows | B580 / `bmg` | **C**, Windows BMG build path; existing build guide is scoped to B70, not B580 acceptance | **G**, Windows + `bmg` manifest support | **C/G**, Windows native-hook/Detours code and `bmg` eligibility | **C**, Windows bootstrap path | Intel portable enhancement planned; no B580 Windows receipt |
-| Windows | A770 / `dg2` | **B**, no `dg2` build target | **G**, Windows + `dg2`; matching kernel missing | **C/G**, Windows hook code and `dg2` eligibility | **C**, incomplete companion stack | Blocked on DG2 kernel path; no receipt |
-| Windows | PTL / `ptl-h` only | **C**, core target path; Windows CuTe explicitly restricted to `bmg` | **G**, Windows + `ptl-h` | **C/G**, Windows hook code and `ptl-h` eligibility | **C**, device untested | Partial source path; no complete portable bundle or receipt |
-| Windows | LNL | **B**, no `lnl` build target | **B**, no `lnl` provider target | **B**, no `lnl` provider target | **C**, generic XPU discovery is not LNL acceptance | Blocked on target integration; no receipt |
+### Ubuntu
+
+OMIX image build.
+
+| GPU / target | omni_xpu_kernels | Kitchen XPU provider | AIMDO XPU provider | ComfyUI_OmniXPU adapters | OWL package / combined validation |
+| --- | --- | --- | --- | --- | --- |
+| B580 / `bmg` | ✅ Validated, focused native cases; B580 policy remains experimental | ✅ Validated, 40 capabilities registered; INT8 reference case tested | ✅ Validated, native hook and VBAR lifecycle | ✅ Validated, registration and diagnostic graph; conditional adapters can skip | ✅ Validated, OMIX build and both DynamicVRAM modes |
+| A770 / `dg2` | 🚫 Missing target support, no `dg2` build target in current kernel pin | 📋 Target declared, unvalidated, `dg2` accepted but requires a matching companion kernel | 📋 Target declared, unvalidated, `dg2` manifest eligibility; device untested | 🧩 Implementation present, unvalidated, generic XPU discovery; incomplete companion stack | 🚫 Blocked on DG2 kernel path; no profile or receipt |
+| PTL / `ptl-h` only | 🧩 Implementation present, unvalidated, explicit `ptl-h` build path | 📋 Target declared, unvalidated, `ptl-h` accepted | 📋 Target declared, unvalidated, `ptl-h` accepted | 🧩 Implementation present, unvalidated, target-dependent routes; device untested | ⏳ No PTL OWL profile or receipt |
+| LNL | 🚫 Missing target support, no `lnl` build target | 🚫 Missing target support, no `lnl` provider target | 🚫 Missing target support, no `lnl` provider target | 🧩 Implementation present, unvalidated, generic XPU discovery is not LNL acceptance | 🚫 Blocked on target integration; no receipt |
+
+### Windows
+
+Official Intel portable enhancement; OWL Windows packaging is planned.
+
+| GPU / target | omni_xpu_kernels | Kitchen XPU provider | AIMDO XPU provider | ComfyUI_OmniXPU adapters | OWL package / combined validation |
+| --- | --- | --- | --- | --- | --- |
+| B580 / `bmg` | 🧩 Implementation present, unvalidated, Windows BMG build path; existing build guide is scoped to B70, not B580 acceptance | 📋 Target declared, unvalidated, Windows + `bmg` manifest support | 🧩 Implementation present, unvalidated; Windows native-hook/Detours code and `bmg` eligibility | 🧩 Implementation present, unvalidated, Windows bootstrap path | ⏳ Intel portable enhancement planned; no B580 Windows receipt |
+| A770 / `dg2` | 🚫 Missing target support, no `dg2` build target | 📋 Target declared, unvalidated, Windows + `dg2`; matching kernel missing | 🧩 Implementation present, unvalidated; Windows hook code and `dg2` eligibility | 🧩 Implementation present, unvalidated, incomplete companion stack | 🚫 Blocked on DG2 kernel path; no receipt |
+| PTL / `ptl-h` only | 🧩 Implementation present, unvalidated, core target path; Windows CuTe explicitly restricted to `bmg` | 📋 Target declared, unvalidated, Windows + `ptl-h` | 🧩 Implementation present, unvalidated; Windows hook code and `ptl-h` eligibility | 🧩 Implementation present, unvalidated, device untested | ⏳ Partial source path; no complete portable bundle or receipt |
+| LNL | 🚫 Missing target support, no `lnl` build target | 🚫 Missing target support, no `lnl` provider target | 🚫 Missing target support, no `lnl` provider target | 🧩 Implementation present, unvalidated, generic XPU discovery is not LNL acceptance | 🚫 Blocked on target integration; no receipt |
 
 
 PTL covers only `ptl-h`. B580 kernel policy remains experimental; the validated
