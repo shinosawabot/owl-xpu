@@ -2,6 +2,17 @@
 
 **Omni Workload Layer Runtime for Intel XPU**
 
+> [!IMPORTANT]
+> **Experimental proof of concept (POC).** OWL-XPU explores a unified approach
+> to packaging, integration and validation across operating systems and Intel
+> GPU platforms. The goal is a more elegant, maintainable way to deliver
+> optimizations for both integrated GPUs (iGPUs) and discrete GPUs (dGPUs),
+> with shared component boundaries and explicit platform-specific behavior.
+> Packaging workflows and interfaces may evolve as the design is tested.
+> Support and optimization coverage remain experimental and vary by OS/device;
+> the [support tables](#support-and-validation) distinguish validated results
+> from implementation paths and planned work.
+
 OWL-XPU records compatible source combinations and packaging methods for Intel
 XPU components used with ComfyUI. Each runtime is maintained in its own
 repository and integrated here as a Git submodule. The
