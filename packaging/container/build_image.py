@@ -22,13 +22,13 @@ def run(*args):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--tag', default='owl-xpu:comfyui-0.35.0-bmg')
+    parser.add_argument('--tag', help='Default: owl-xpu:comfyui-<pinned host version>-bmg')
     parser.add_argument('--work-dir', type=Path, required=True,
                         help='New directory for the isolated build context and logs')
     parser.add_argument('--no-cache', action='store_true')
     args = parser.parse_args()
     plan = module.inspect_sources(ROOT)
-    assert plan['components']['host']['revision'] == '40c4fcdf513a4523e39d54a9d391908af8df8171'
+    args.tag = args.tag or f"owl-xpu:comfyui-{module.host_identity(ROOT)['host_version']}-bmg"
     work = args.work_dir.resolve()
     work.mkdir(parents=True, exist_ok=False)
     context = work / 'context'

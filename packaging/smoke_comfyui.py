@@ -17,6 +17,7 @@ def main():
     parser.add_argument('--url', default='http://127.0.0.1:8188')
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--require-aimdo', action='store_true')
+    parser.add_argument('--expected-comfyui-version', default='0.35.0')
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=False)
     opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
@@ -41,7 +42,7 @@ def main():
                 raise
             time.sleep(1)
     save('system_stats.json', stats)
-    assert stats['system']['comfyui_version'] == '0.35.0', stats
+    assert stats['system']['comfyui_version'] == args.expected_comfyui_version, stats
     assert stats['system']['pytorch_version'] == '2.13.0+xpu', stats
     assert any(d['type'] == 'xpu' for d in stats['devices']), stats
     objects = request('/object_info')
@@ -75,7 +76,7 @@ def main():
     save('result.json', {'status': 'passed', 'require_aimdo': args.require_aimdo,
                          'scope': 'model-free API and provider integration'})
     print(status)
-    print('PASS: enhanced ComfyUI 0.35.0 model-free integration')
+    print(f'PASS: enhanced ComfyUI {args.expected_comfyui_version} model-free integration')
 
 
 if __name__ == '__main__':

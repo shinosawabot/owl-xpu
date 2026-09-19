@@ -13,6 +13,9 @@ the resulting enhancement bundle into official ComfyUI 0.35.0. It does not use
 
 The first complete clean-build result is recorded in the
 [validation report](omix-validation.md).
+For other OS/device combinations and independent ComfyUI upgrades, see the
+[platform matrix](platform-validation.md). A new host version is recorded from
+its committed submodule source; it is not automatically marked validated.
 
 ## Inputs and upstream provenance
 

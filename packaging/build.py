@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import ast
 import hashlib
 import json
 import os
@@ -86,6 +87,19 @@ def aimdo_build_environment(env: dict) -> dict:
     raise RuntimeError("AIMDO requires ur_api.h; set UR_INCLUDE_DIR to its directory")
 
 
+def host_identity(root: Path = ROOT) -> dict:
+    data = (root / "components/ComfyUI/comfyui_version.py").read_bytes()
+    for node in ast.parse(data).body:
+        if isinstance(node, ast.Assign) and any(
+            isinstance(target, ast.Name) and target.id == "__version__" for target in node.targets
+        ):
+            version = ast.literal_eval(node.value)
+            if isinstance(version, str) and version:
+                return {"host_version": version,
+                        "host_version_file_sha256": hashlib.sha256(data).hexdigest()}
+    raise RuntimeError("Pinned ComfyUI source does not declare a literal version")
+
+
 def build(args: argparse.Namespace, plan: dict) -> None:
     profile = plan["profile"]
     if sys.platform != profile["platform"]:
@@ -164,6 +178,7 @@ def main() -> None:
     plan = inspect_sources()
     if args.command != "check":
         plan.update(profile=json.loads(args.profile.read_text()), selected_components=args.components)
+        plan.update(host_identity())
     if args.command == "build":
         if args.output is None:
             parser.error("build requires --output pointing to a new directory")

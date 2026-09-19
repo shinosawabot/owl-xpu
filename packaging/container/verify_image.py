@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--image', default='owl-xpu:comfyui-0.35.0-bmg')
+    parser.add_argument('--image', help='Default: image tag derived from the pinned host version')
     parser.add_argument('--pci', required=True)
     parser.add_argument('--ze-affinity', required=True)
     parser.add_argument('--output', type=Path, required=True)
@@ -25,6 +25,8 @@ def main():
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     sources = module.inspect_sources(ROOT)
+    host_version = module.host_identity(ROOT)['host_version']
+    args.image = args.image or f'owl-xpu:comfyui-{host_version}-bmg'
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=False)
     common = ['--network=none', '--device=/dev/dri',
@@ -41,6 +43,7 @@ def main():
          '/opt/owl-bundle/manifest.json'], 'bundle-manifest.json')
     manifest = json.loads((output / 'bundle-manifest.json').read_text())
     assert manifest['components'] == sources['components'], 'Verification source gitlinks differ from image'
+    assert manifest.get('host_version', host_version) == host_version
     run(['docker', 'run', '--rm', *common, '--entrypoint=python', args.image,
          '/validation/packaging/container/device_check.py', '--pci', args.pci,
          '--output', '/evidence/device'], 'device.log')
@@ -61,7 +64,8 @@ def main():
                  '--listen', '127.0.0.1', '--port', '8188', '--disable-api-nodes',
                  '--' + ('enable' if mode == 'enabled' else 'disable') + '-dynamic-vram'],
                 mode + '-container.txt')
-            command = ['docker', 'exec', name, 'python', '/opt/owl/smoke_comfyui.py',
+            command = ['docker', 'exec', name, 'python', '/validation/packaging/smoke_comfyui.py',
+                       '--expected-comfyui-version', host_version,
                        '--output', '/evidence/' + mode]
             if mode == 'enabled':
                 command.append('--require-aimdo')
@@ -79,7 +83,7 @@ def main():
         'checks': ['36 native RMSNorm cases', 'DynamicVRAM enabled: both providers active',
                    'Kitchen INT8 exact reference and AIMDO VBAR hit/evict/refault',
                    'DynamicVRAM disabled: Kitchen active, AIMDO skipped',
-                   'official ComfyUI 0.35.0 diagnostic workflow in both modes'],
+                   f'official ComfyUI {host_version} diagnostic workflow in both modes'],
         'scope': 'B580 packaging and model-free integration; no inference/performance claim',
     }, indent=2) + '\n')
     print('PASS:', output / 'result.json')

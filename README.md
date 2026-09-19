@@ -79,6 +79,12 @@ build stages and launch/export commands. The [clean-build validation report](doc
 
 ## Status
 
+See the [Ubuntu/Windows device and component matrix](docs/platform-validation.md)
+for B580, A770, PTL and LNL. Ubuntu uses the OMIX build; the planned Windows
+route enhances the official Intel portable. The
+[upgrade contract](docs/windows-portable.md#upgrade-acceptance-contract) requires
+compatible ComfyUI upgrades to preserve adapter and component behavior.
+
 This is a submodule-based assembly and a BMG/Torch 2.13 development packaging
 recipe. Packaging and model-free smoke checks do not establish model inference
 correctness, workflow benefit or support for another device.

@@ -8,7 +8,7 @@ import zipfile
 
 root = Path('/opt/owl-bundle')
 manifest = json.loads((root / 'manifest.json').read_text())
-assert manifest['components']['host']['revision'] == '40c4fcdf513a4523e39d54a9d391908af8df8171'
+assert hashlib.sha256(Path('/opt/ComfyUI/comfyui_version.py').read_bytes()).hexdigest() == manifest['host_version_file_sha256']
 assert set(manifest['selected_components']) == {'kernels', 'kitchen', 'aimdo', 'comfyui'}
 for name, digest in manifest['artifacts'].items():
     artifact = (root / name).resolve()
