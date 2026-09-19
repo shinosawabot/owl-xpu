@@ -61,3 +61,7 @@ establish generation quality, model inference correctness, speedups, memory
 savings or support for another device. AIMDO's XPU memory compiler is still
 unsupported; the tested native-hook functionality concerns allocator accounting
 and model-weight residency/offloading. No model weights were downloaded.
+
+Earlier component-level ESIMD SDP and CuTe D128 correctness results are recorded
+in the separate [B580 kernel receipt](b580-kernel-validation.md). Those tests
+ran in the preceding development image, not in this clean OMIX validation run.

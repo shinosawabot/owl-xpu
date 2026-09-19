@@ -58,9 +58,9 @@ retain their current status until evidence supports reclassification.
 
 OMIX image build.
 
-| GPU / target | omni_xpu_kernels core (non-CuTe) | CuTe / sycl-tla extensions | Kitchen XPU provider | AIMDO XPU provider | ComfyUI_OmniXPU adapters | OWL package / combined validation |
+| GPU / target | SYCL/ESIMD + oneDNN (`_C` / `lgrf_sdp`) | CuTe / sycl-tla (`cute_fmha_torch`) | Kitchen XPU provider | AIMDO XPU provider | ComfyUI_OmniXPU adapters | OWL package / combined validation |
 | --- | --- | --- | --- | --- | --- | --- |
-| B580 / `bmg` | ✅ Validated, focused native cases; B580 policy remains experimental | 🧩 Built and included in the validated wheel; dedicated CuTe correctness/performance not validated by this receipt | ✅ Validated, 40 capabilities registered; INT8 reference case tested | ✅ Validated, native hook and VBAR lifecycle | ✅ Validated, registration and diagnostic graph; conditional adapters can skip | ✅ Validated, OMIX build and both DynamicVRAM modes |
+| B580 / `bmg` | ✅ Validated, 36 RMSNorm cases and 2 ESIMD SDP dtype cases; experimental B580 policy | ✅ Validated, BF16 D128 Z-Image attention correctness ([receipt](docs/b580-kernel-validation.md)); other CuTe routes/performance not covered | ✅ Validated, 40 capabilities registered; INT8 reference case tested | ✅ Validated, native hook and VBAR lifecycle | ✅ Validated, registration and diagnostic graph; conditional adapters can skip | ✅ Validated, OMIX build and both DynamicVRAM modes |
 | A770 / `dg2` | 🚫 Missing target support, no `dg2` build target in current kernel pin | 🚫 Missing `dg2` CuTe/AOT target | 📋 Target declared, unvalidated, `dg2` accepted but requires a matching companion kernel | 📋 Target declared, unvalidated, `dg2` manifest eligibility; device untested | 🧩 Implementation present, unvalidated, generic XPU discovery; incomplete companion stack | 🚫 Blocked on DG2 kernel path; no profile or receipt |
 | PTL / `ptl-h` only | 🧩 Implementation present, unvalidated, explicit `ptl-h` build path | 🧩 `ptl-h` CuTe/AOT build path exists; device unvalidated | 📋 Target declared, unvalidated, `ptl-h` accepted | 📋 Target declared, unvalidated, `ptl-h` accepted | 🧩 Implementation present, unvalidated, target-dependent routes; device untested | ⏳ No PTL OWL profile or receipt |
 | LNL | 🚫 Missing target support, no `lnl` build target | 🚫 Missing `lnl` CuTe/AOT target | 🚫 Missing target support, no `lnl` provider target | 🚫 Missing target support, no `lnl` provider target | 🧩 Implementation present, unvalidated, generic XPU discovery is not LNL acceptance | 🚫 Blocked on target integration; no receipt |
@@ -69,7 +69,7 @@ OMIX image build.
 
 Official Intel portable enhancement; OWL Windows packaging is planned.
 
-| GPU / target | omni_xpu_kernels core (non-CuTe) | CuTe / sycl-tla extensions | Kitchen XPU provider | AIMDO XPU provider | ComfyUI_OmniXPU adapters | OWL package / combined validation |
+| GPU / target | SYCL/ESIMD + oneDNN (`_C` / `lgrf_sdp`) | CuTe / sycl-tla (`cute_fmha_torch`) | Kitchen XPU provider | AIMDO XPU provider | ComfyUI_OmniXPU adapters | OWL package / combined validation |
 | --- | --- | --- | --- | --- | --- | --- |
 | B580 / `bmg` | 🧩 Implementation present, unvalidated, Windows BMG build path; existing build guide is scoped to B70, not B580 acceptance | 🧩 BMG CuTe build path; explicit opt-in required; B580 device unvalidated | 📋 Target declared, unvalidated, Windows + `bmg` manifest support | 🧩 Implementation present, unvalidated; Windows native-hook/Detours code and `bmg` eligibility | 🧩 Implementation present, unvalidated, Windows bootstrap path | ⏳ Intel portable enhancement planned; no B580 Windows receipt |
 | A770 / `dg2` | 🚫 Missing target support, no `dg2` build target | 🚫 Missing `dg2` CuTe/AOT target | 📋 Target declared, unvalidated, Windows + `dg2`; matching kernel missing | 🧩 Implementation present, unvalidated; Windows hook code and `dg2` eligibility | 🧩 Implementation present, unvalidated, incomplete companion stack | 🚫 Blocked on DG2 kernel path; no receipt |
@@ -77,9 +77,12 @@ Official Intel portable enhancement; OWL Windows packaging is planned.
 | LNL | 🚫 Missing target support, no `lnl` build target | 🚫 Missing `lnl` CuTe/AOT target | 🚫 Missing target support, no `lnl` provider target | 🚫 Missing target support, no `lnl` provider target | 🧩 Implementation present, unvalidated, generic XPU discovery is not LNL acceptance | 🚫 Blocked on target integration; no receipt |
 
 
-Core and CuTe are tracked separately for validation; they currently ship in the
-same kernel wheel. CuTe covers the sycl-tla-based `cute_fmha_torch` extension,
-including its CuTe FMHA/Sol-Attn paths. A core pass does not imply a CuTe pass.
+The two kernel columns follow implementation families within one wheel: `_C`
+provides SYCL/ESIMD and oneDNN operations, with ESIMD SDP delegated to
+`lgrf_sdp`; the separate `cute_fmha_torch` extension provides sycl-tla-based
+CuTe FMHA and BMG Sol-Attn. See the [native architecture](docs/architecture.md#native-kernel-architecture).
+B580 has correctness evidence for both families; a passing CuTe FMHA case does
+not establish coverage of every CuTe/Sol-Attn route or a performance claim.
 
 PTL covers only `ptl-h`. B580 kernel policy remains experimental; the validated
 scope is focused numerical checks and model-free integration, not complete

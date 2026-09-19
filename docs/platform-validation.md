@@ -43,21 +43,25 @@ or plain Torch XPU cannot run on those devices.
 
 ## Evidence and component boundaries
 
-The homepage separates **kernel core (non-CuTe)** from **CuTe / sycl-tla
-extensions**. This is a validation boundary, not a new repository or wheel split:
-the current kernel wheel contains both. The CuTe column covers
-`omni_xpu_kernel.cute.cute_fmha_torch` and its FMHA/Sol-Attn paths; the non-CuTe
-column covers the remaining native extensions, with only the stated cases
-validated. Core RMSNorm and Kitchen INT8 checks do not validate CuTe attention.
+The homepage splits the kernel package into **SYCL/ESIMD + oneDNN** and
+**CuTe / sycl-tla** implementation families. These map to three native artifacts:
+`_C`, its ESIMD SDP library `lgrf_sdp`, and the independently loaded
+`cute_fmha_torch`. All still ship in one wheel. The
+[native architecture](architecture.md#native-kernel-architecture) explains the API,
+loader and dependency boundaries.
 
-The Ubuntu/B580 build produced a wheel containing the CuTe shared library, but
-the linked OWL receipt does not include dedicated CuTe numerical/performance
-acceptance. It therefore remains marked as built but device-unvalidated in that
-column. Linux has `bmg` and `ptl-h` CuTe AOT paths; neither `dg2` nor `lnl` is
-declared. Windows CuTe is opt-in (`OMNI_XPU_REQUIRE_CUTE=1`) and explicitly
-restricted to `bmg`; a Windows core target path does not remove that restriction.
-These source restrictions are not device-tested “validated — not supported”
-outcomes. Changing a CuTe status requires its own target-specific evidence.
+Ubuntu/B580 has prior correctness evidence for both columns: 36 RMSNorm cases,
+2 ESIMD SDP dtype cases and the BF16 D128 Z-Image CuTe attention contract passed.
+The [kernel validation receipt](b580-kernel-validation.md) identifies that earlier
+development image, native-library hashes and test scope. The later
+[OMIX integration receipt](omix-validation.md) is a separate run with narrower
+native tests; its omission of a CuTe test does not invalidate the earlier pass.
+Neither receipt establishes all CuTe/Sol-Attn routes or performance acceptance.
+
+Linux has `bmg` and `ptl-h` CuTe AOT paths; neither `dg2` nor `lnl` is declared.
+Windows CuTe is opt-in (`OMNI_XPU_REQUIRE_CUTE=1`) and explicitly restricted to
+`bmg`. These source restrictions are not device-tested “validated — not supported”
+outcomes. New OS/device combinations require their own evidence.
 
 - [Kernel target metadata](../components/omni_xpu_kernels/omni_xpu_kernel/_version.py)
   lists `bmg` and `ptl-h`; [setup.py](../components/omni_xpu_kernels/setup.py)
