@@ -1,6 +1,6 @@
 # OWL-XPU
 
-**Omni Workload Layer Runtime for Intel XPU**
+**Omni Workload Layer Runtime for Intel XPU (iGPU/dGPU)**
 
 > [!IMPORTANT]
 > **Experimental proof of concept (POC).** OWL-XPU explores a unified approach
