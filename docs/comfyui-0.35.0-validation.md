@@ -56,7 +56,9 @@ own their private runtime files and are selected during prestartup.
 
 Expose `/dev/dri` only to the runtime container. For this host,
 `ZE_AFFINITY_MASK=0` selects the Arc B580 at PCI `0000:03:00.0`. Verify physical
-identity first and run the tuning repository's idle preflight. Run `xpu-smi`
+identity and device idleness first. The current OWL
+[verification procedure](omix-container.md#run-and-verify-on-this-b580-host)
+automates these checks using `packaging/container/device_check.py`. Run `xpu-smi`
 **without** `ZE_AFFINITY_MASK`: the masked Sysman enumeration on this host
 incorrectly reports the integrated GPU. Torch's masked identity must match the
 unmasked physical-device mapping. This mapping is host-specific.

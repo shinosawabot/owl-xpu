@@ -3,9 +3,9 @@
 **Omni Workload Layer Runtime for Intel XPU**
 
 OWL-XPU records compatible source combinations and packaging methods for Intel
-XPU components used with ComfyUI. It follows the component boundaries described
-by [xiangyuT/owl-xpu](https://github.com/xiangyuT/owl-xpu), with each runtime
-maintained in its own repository and integrated here as a Git submodule.
+XPU components used with ComfyUI. Each runtime is maintained in its own
+repository and integrated here as a Git submodule. The
+[architecture document](docs/architecture.md) defines component responsibilities.
 
 This repository contains **documentation and packaging only**. Native kernels,
 operator dispatch, allocator implementations and ComfyUI adapters belong in
@@ -82,12 +82,11 @@ build stages and launch/export commands. The [clean-build validation report](doc
 This is a submodule-based assembly and a BMG/Torch 2.13 development packaging
 recipe. Packaging and model-free smoke checks do not establish model inference
 correctness, workflow benefit or support for another device.
-DG2/A770 and LNL remain directions inherited from the reference design;
+DG2/A770 and LNL remain future target directions;
 each requires its own implementation and device validation.
 
-Architecture reference: `xiangyuT/owl-xpu@7ecf3402d87381aa7f8fb608840c1c6facd3695d`.
-Measurement/evidence reference:
-`xiangyuT/omni-xpu-kernel-tuning@c1a22c362e162b69dc3e3a628a02a6494bed9a15`.
-The original reference history is retained. Component licenses and attribution
-remain in each submodule; the root Apache-2.0 license covers this assembly's new
+Build and verification evidence is described in the
+[validation report](docs/omix-validation.md).
+Component licenses and attribution remain in each submodule; the root
+Apache-2.0 license covers this assembly's new
 documentation and packaging code.

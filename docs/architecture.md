@@ -38,6 +38,7 @@ likewise be a reviewed, pinned submodule. sycl-tla is an
 external build-time header checkout whose required commit is specified in the
 packaging profile and verified before a kernel build.
 
-The tuning repository owns measurement contracts and evidence. Reusing a build
-target or a package version does not transfer roofline ceilings, numerical
-acceptance or workflow support across devices.
+Measurement contracts and evidence must be recorded for each tested device;
+see the [current validation report](omix-validation.md) for the supported scope.
+Reusing a build target or a package version does not transfer roofline ceilings,
+numerical acceptance or workflow support across devices.
