@@ -25,6 +25,17 @@ The canonical OS/device/component support matrix and its status legend are
 shown on the [OWL project homepage](../README.md#support-and-validation).
 This document provides the deployment details, evidence and upgrade criteria.
 
+Validation outcomes can also be **❌ Validated — not supported**,
+**⚠️ Validated — not recommended**, or **🔧 Validated — needs optimization**.
+Use these only with a receipt identifying the OS/device, component pins,
+environment, test scope and observed results. A confirmed functional blocker
+belongs in the first category. A functioning combination with a documented
+reason to avoid it belongs in the second. A functioning combination with
+measured optimization work remaining belongs in the third; if those gaps also
+make it unsuitable for the intended use, use “not recommended” and explain why.
+Build-target gaps without a device test remain “missing target support / blocked.”
+No existing row is reclassified merely by adding these status definitions.
+
 PTL here means only the explicit `ptl-h` target in the pinned sources; no other
 PTL SKU is covered. Do not reuse BMG wheels for LNL or DG2 by renaming or retagging
 them. These gaps concern OWL's enhanced stack, not a claim that upstream ComfyUI

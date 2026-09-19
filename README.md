@@ -41,10 +41,18 @@ The tables describe the current committed component pins (updated 2026-09-19).
 Status indicators (always accompanied by text):
 
 - ✅ **Validated**: OWL device checks passed within the documented test scope.
+- ❌ **Validated — not supported**: testing confirmed that the component or combination cannot satisfy the required functionality; record the failing case and environment.
+- ⚠️ **Validated — not recommended**: required functional checks passed, but measured reliability, performance or resource-use drawbacks make this combination unsuitable for the stated use case; document the reason.
+- 🔧 **Validated — needs optimization**: required functional checks passed, but measured performance or resource-use gaps remain; document the optimization targets and baseline.
 - 🧩 **Implementation present, unvalidated**: code/build path exists; this OS/device combination has not passed OWL validation.
 - 📋 **Target declared, unvalidated**: provider metadata admits the target; functionality is not yet established.
 - 🚫 **Missing target support / blocked**: the current component pins cannot provide the complete enhancement.
 - ⏳ **Planned / awaiting validation**: delivery or device validation is still pending.
+
+The three qualified validation statuses require device-specific evidence and a
+stated test scope. Missing implementation alone is not a validated failure;
+suspected slowness alone is not a measured optimization gap. Existing entries
+retain their current status until evidence supports reclassification.
 
 ### Ubuntu
 
