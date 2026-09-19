@@ -88,3 +88,19 @@ until the candidate passes the upgrade checks. See the
 [upgrade acceptance contract](windows-portable.md#upgrade-acceptance-contract)
 for both operating systems. No automatic acceptance of arbitrary newer versions
 or runtime ABI changes is implied.
+
+### Validation of the version-handling change
+
+On 2026-09-19, eight packaging-control tests passed, including synthetic host
+version changes and version-file hashing. A custom-node-only package recorded
+the selected host identity. An isolated installer fixture accepted the matching
+0.35.0 host and rejected an altered version file before installation. The
+updated verifier also passed the existing Ubuntu/B580 image's native/provider
+checks and both DynamicVRAM diagnostic workflows.
+
+These are regression checks for the packaging/version-handling change. The
+synthetic version fixture is not a newer ComfyUI release test; the native image
+was not rebuilt for another ComfyUI version. No additional matrix row becomes
+validated as a result. Raw results are retained on the validation machine under
+`omni-local/owl-upgrade-validation/`, `omni-local/owl-upgrade-installer/` and
+`omni-local/owl-upgrade-node-only/`.
