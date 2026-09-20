@@ -49,13 +49,14 @@ same-graph warm-up run.
 
 | Device | Startup memory mode | Warm generation | Example |
 | --- | --- | ---: | --- |
-| B580 / `bmg` | `--disable-dynamic-vram --lowvram --cpu-vae` | **13.775 s** | <img src="blogs/assets/zimage-turbo-int8-owl-b580.png" alt="B580 OWL-XPU example" width="256"> |
+| B580 / `bmg` | `--disable-dynamic-vram` | **4.576 s** | <img src="blogs/assets/zimage-turbo-int8-owl-b580.png" alt="B580 OWL-XPU example" width="256"> |
 | A770 / `dg2` | `--disable-dynamic-vram` | **7.810 s** | <img src="blogs/assets/zimage-turbo-int8-owl-dg2.png" alt="DG2 OWL-XPU example" width="256"> |
 | PTL-H / Arc B390 | `--disable-dynamic-vram` | **12.412 s** | <img src="blogs/assets/zimage-turbo-int8-owl-ptl-h.png" alt="PTL-H OWL-XPU example" width="256"> |
 
 These values are functional warm-generation records rather than a normalized
-performance benchmark: B580 required ComfyUI low-memory mode, while DG2 uses the
-core-only PyTorch SDPA attention path and PTL-H uses CUTE attention. The complete
+performance benchmark: all three use the same DynamicVRAM-off resident startup,
+while DG2 uses the core-only PyTorch SDPA attention path and PTL-H uses CUTE
+attention. The complete
 prompt, graph hash, model hashes, image identities, output hashes and route notes
 are in the [full OWL status record](blogs/2026-09-21-zimage-turbo-int8-owl-status.md).
 
