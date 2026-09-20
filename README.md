@@ -39,6 +39,31 @@ top-level areas:
 - [`blogs/`](blogs/): practical records from running those graphs with an OWL-built ComfyUI package.
 - [`docs/`](docs/): architecture, procedures, support matrices and validation receipts.
 
+## Current status
+
+The OWL-focused [`Z Image Turbo INT8 workflow`](workflows/zimage-turbo-int8-owl-api.json)
+was run successfully on each currently validated Linux target with the same
+prompt, model files and two-stage warm execution protocol. The timed value is
+the ComfyUI `execution_start` to `execution_success` interval after one
+same-graph warm-up run.
+
+| Device | Startup memory mode | Warm generation | Example |
+| --- | --- | ---: | --- |
+| B580 / `bmg` | `--disable-dynamic-vram --lowvram --cpu-vae` | **13.775 s** | <img src="blogs/assets/zimage-turbo-int8-owl-b580.png" alt="B580 OWL-XPU example" width="256"> |
+| A770 / `dg2` | `--disable-dynamic-vram` | **7.810 s** | <img src="blogs/assets/zimage-turbo-int8-owl-dg2.png" alt="DG2 OWL-XPU example" width="256"> |
+| PTL-H / Arc B390 | `--disable-dynamic-vram` | **12.412 s** | <img src="blogs/assets/zimage-turbo-int8-owl-ptl-h.png" alt="PTL-H OWL-XPU example" width="256"> |
+
+These values are functional warm-generation records rather than a normalized
+performance benchmark: B580 required ComfyUI low-memory mode, while DG2 uses the
+core-only PyTorch SDPA attention path and PTL-H uses CUTE attention. The complete
+prompt, graph hash, model hashes, image identities, output hashes and route notes
+are in the [full OWL status record](blogs/2026-09-21-zimage-turbo-int8-owl-status.md).
+
+DynamicVRAM is currently recommended as an explicit opt-in for memory-pressure
+workflows such as MiniMax H3. Keep it disabled by default for ordinary image
+workflows when resident weights fit; the B580 run's default DynamicVRAM VBAR
+fault makes target-specific validation necessary before enabling it.
+
 ## Support and validation
 
 Ubuntu uses the OMIX image build. The planned Windows route enhances the
@@ -84,32 +109,6 @@ Official Intel portable enhancement; OWL Windows packaging is planned.
 | A770 / `dg2` | 🚫 Missing target support, no `dg2` build target | 🚫 Missing `dg2` CuTe/AOT target | 📋 Target declared, unvalidated, Windows + `dg2`; matching kernel missing | 🧩 Implementation present, unvalidated; Windows hook code and `dg2` eligibility | 🧩 Implementation present, unvalidated, incomplete companion stack | 🚫 Blocked on DG2 kernel path; no receipt |
 | PTL / `ptl-h` only | 🧩 Implementation present, unvalidated, core `ptl-h` target path | 🚫 Windows CuTe build explicitly restricted to `bmg` | 📋 Target declared, unvalidated, Windows + `ptl-h` | 🧩 Implementation present, unvalidated; Windows hook code and `ptl-h` eligibility | 🧩 Implementation present, unvalidated, device untested | ⏳ Partial source path; no complete portable bundle or receipt |
 | LNL | 🚫 Missing target support, no `lnl` build target | 🚫 Missing `lnl` CuTe/AOT target | 🚫 Missing target support, no `lnl` provider target | 🚫 Missing target support, no `lnl` provider target | 🧩 Implementation present, unvalidated, generic XPU discovery is not LNL acceptance | 🚫 Blocked on target integration; no receipt |
-
-## Current status
-
-The OWL-focused [`Z Image Turbo INT8 workflow`](workflows/zimage-turbo-int8-owl-api.json)
-was run successfully on each currently validated Linux target with the same
-prompt, model files and two-stage warm execution protocol. The timed value is
-the ComfyUI `execution_start` to `execution_success` interval after one
-same-graph warm-up run.
-
-| Device | OWL image | Startup memory mode | Warm generation | Example |
-| --- | --- | --- | ---: | --- |
-| B580 / `bmg` | `owl-xpu:comfyui-0.35.0-bmg` | `--disable-dynamic-vram --lowvram --cpu-vae` | **13.775 s** | <img src="blogs/assets/zimage-turbo-int8-owl-b580.png" alt="B580 OWL-XPU example" width="256"> |
-| A770 / `dg2` | `owl-xpu:comfyui-0.35.0-dg2-current` | `--disable-dynamic-vram` | **7.810 s** | <img src="blogs/assets/zimage-turbo-int8-owl-dg2.png" alt="DG2 OWL-XPU example" width="256"> |
-| PTL-H / Arc B390 | `owl-xpu:comfyui-0.35.0-ptl-h` | `--disable-dynamic-vram` | **12.412 s** | <img src="blogs/assets/zimage-turbo-int8-owl-ptl-h.png" alt="PTL-H OWL-XPU example" width="256"> |
-
-These values are functional warm-generation records rather than a normalized
-performance benchmark: B580 required ComfyUI low-memory mode, while DG2 uses the
-core-only PyTorch SDPA attention path and PTL-H uses CUTE attention. The complete
-prompt, graph hash, model hashes, image identities, output hashes and route notes
-are in the [full OWL status record](blogs/2026-09-21-zimage-turbo-int8-owl-status.md).
-
-DynamicVRAM is currently recommended as an explicit opt-in for memory-pressure
-workflows such as MiniMax H3. Keep it disabled by default for ordinary image
-workflows when resident weights fit; the B580 run's default DynamicVRAM VBAR
-fault makes target-specific validation necessary before enabling it.
-
 
 The two kernel columns follow implementation families within one wheel: `_C`
 provides SYCL/ESIMD and oneDNN operations, with ESIMD SDP delegated to
