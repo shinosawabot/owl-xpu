@@ -74,7 +74,12 @@ def only_wheel(directory: Path) -> Path:
 
 def aimdo_build_environment(env: dict) -> dict:
     """Resolve toolchain headers before starting any expensive native build."""
-    compiler = shutil.which(env.get("CXX", "icpx"), path=env.get("PATH"))
+    compiler = None
+    for candidate in (env.get("CXX", ""), "icpx", "icx-cl"):
+        if candidate:
+            compiler = shutil.which(candidate, path=env.get("PATH"))
+            if compiler:
+                break
     if compiler is None:
         raise RuntimeError("AIMDO requires the oneAPI C++ compiler (CXX or icpx)")
     include = Path(compiler).resolve().parent.parent / "include"
@@ -103,7 +108,10 @@ def host_identity(root: Path = ROOT) -> dict:
 def build(args: argparse.Namespace, plan: dict) -> None:
     profile = plan["profile"]
     if sys.platform != profile["platform"]:
-        raise RuntimeError("This recipe currently supports Linux only")
+        raise RuntimeError(
+            f"profile {profile.get('profile', '<unnamed>')} targets "
+            f"{profile['platform']}, current host is {sys.platform}"
+        )
     require_cute = profile.get(
         "require_cute", profile["xpu_target"] not in {"dg2"}
     )
@@ -145,7 +153,10 @@ def build(args: argparse.Namespace, plan: dict) -> None:
         run(["git", "clone", "--no-hardlinks", "--no-checkout", str(source), str(work)], cwd=ROOT, env=env, log=log)
         run(["git", "checkout", "--detach", item["revision"]], cwd=work, env=env, log=log)
         if key == "aimdo":
-            run(["bash", "scripts/build-linux-xpu.sh"], cwd=work, env=env, log=log)
+            if sys.platform == "win32":
+                run(["cmd", "/d", "/c", "scripts\\build-windows-xpu.cmd"], cwd=work, env=env, log=log)
+            else:
+                run(["bash", "scripts/build-linux-xpu.sh"], cwd=work, env=env, log=log)
         wheel_env = env
         if key == "aimdo":
             # The co-installable provider must accept the official host version.
