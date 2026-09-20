@@ -35,8 +35,8 @@ moving branch or downloads an unpinned replacement implementation.
 
 Ubuntu uses the OMIX image build. The planned Windows route enhances the
 upstream Intel portable; an OWL Windows installer is not yet available.
-Ubuntu/B580 has the clean-image receipt, and Ubuntu/DG2 has a focused
-core-only container and ComfyUI workflow receipt. The tables describe the
+Ubuntu/B580 has the clean-image receipt. Ubuntu/DG2 and Ubuntu/PTL-H have
+focused container and ComfyUI workflow receipts. The tables describe the
 current committed component pins (updated 2026-09-21).
 
 Status indicators (always accompanied by text):
@@ -63,7 +63,7 @@ OMIX image build.
 | --- | --- | --- | --- | --- | --- | --- |
 | B580 / `bmg` | ✅ Validated, 36 RMSNorm cases and 2 ESIMD SDP dtype cases; experimental B580 policy | ✅ Validated, BF16 D128 Z-Image attention correctness ([receipt](docs/b580-kernel-validation.md)); other CuTe routes/performance not covered | ✅ Validated, 40 capabilities registered; INT8 reference case tested | ✅ Validated, native hook and VBAR lifecycle | ✅ Validated, registration and diagnostic graph; conditional adapters can skip | ✅ Validated, OMIX build and both DynamicVRAM modes |
 | A770 / `dg2` | ✅ Validated, core `_C` wheel and ESIMD RMSNorm exercised; LGRF sidecar is intentionally omitted | ❌ Validated — not supported, DG2 CuTe/LGRF AOT is unavailable; ComfyUI uses PyTorch SDPA | ✅ Validated, DG2 XPU provider active and INT8 calls exercised | 📋 Target declared, not separately validated in the focused workflow | ✅ Validated, INT8 FFN adapter and DG2 attention fallback loaded | ✅ Validated, core-only DG2 profile plus the Z-Image Turbo INT8 workflow ([receipt](docs/dg2-validation.md)) |
-| PTL / `ptl-h` only | 🧩 Implementation present, unvalidated, explicit `ptl-h` build path | 🧩 `ptl-h` CuTe/AOT build path exists; device unvalidated | 📋 Target declared, unvalidated, `ptl-h` accepted | 📋 Target declared, unvalidated, `ptl-h` accepted | 🧩 Implementation present, unvalidated, target-dependent routes; device untested | ⏳ No PTL OWL profile or receipt |
+| PTL / `ptl-h` only | ✅ Validated, PTL-H core and LGRF numerical smoke | ✅ Validated, PTL-H CUTE D128 smoke and workflow attention calls | ✅ Validated, PTL-H provider and fused INT8 ConvRot workflow | ✅ Validated, PTL-H provider startup; fused workflow gate uses resident weights | ✅ Validated, PTL-H CUTE, RMSNorm and INT8 FFN adapters | ✅ Validated, PTL-H Torch 2.13 image and Z-Image Turbo INT8 workflow ([receipt](docs/ptl-h-validation.md)) |
 | LNL | 🚫 Missing target support, no `lnl` build target | 🚫 Missing `lnl` CuTe/AOT target | 🚫 Missing target support, no `lnl` provider target | 🚫 Missing target support, no `lnl` provider target | 🧩 Implementation present, unvalidated, generic XPU discovery is not LNL acceptance | 🚫 Blocked on target integration; no receipt |
 
 ### Windows
@@ -90,10 +90,12 @@ LGRF sidecars are excluded because the DG2 compiler path does not support them.
 The ComfyUI adapter therefore keeps attention on native PyTorch SDPA while
 routing the supported INT8 ConvRot feed-forward path through OmniXPU.
 
-PTL covers only `ptl-h`. B580 kernel policy remains experimental; the validated
-scope is focused numerical checks and model-free integration, not complete
-model inference or performance acceptance. Windows BMG build code is not a
-B580 Windows validation result.
+PTL covers only `ptl-h`. Its focused workflow gate uses resident model weights
+with DynamicVRAM disabled; the default DynamicVRAM startup is covered only as
+provider startup and model execution with its documented offload fallback.
+B580 kernel policy remains experimental; the validated scope is focused
+numerical checks and one model workflow, not performance acceptance or complete
+model coverage. Windows BMG build code is not a B580 Windows validation result.
 
 See [component evidence and deployment details](docs/platform-validation.md),
 the [Ubuntu/B580 validation report](docs/omix-validation.md), and the
@@ -136,6 +138,15 @@ python packaging/build.py build \
   --output dist/dg2-torch213
 ```
 
+For the validated Linux PTL-H profile, keep the pinned sycl-tla checkout:
+
+```bash
+python packaging/build.py build \
+  --profile packaging/profiles/ptl-h-torch213.json \
+  --sycl-tla /path/to/pinned/sycl-tla \
+  --output dist/ptl-h-torch213
+```
+
 The result contains the native kernel wheel, separately packaged Kitchen/AIMDO
 XPU provider wheels, a ComfyUI custom-node ZIP and a SHA256 manifest. Native builds
 run in fresh source copies under the ignored output directory; the submodule
@@ -173,9 +184,9 @@ route enhances the official Intel portable. The
 [upgrade contract](docs/windows-portable.md#upgrade-acceptance-contract) requires
 compatible ComfyUI upgrades to preserve adapter and component behavior.
 
-This is a submodule-based assembly and a BMG/DG2/Torch 2.13 development
-packaging recipe. The DG2 receipt covers one ComfyUI Z-Image Turbo INT8 graph;
-it does not establish complete model coverage, CuTe support or performance
+This is a submodule-based assembly and a BMG/DG2/PTL-H/Torch 2.13 development
+packaging recipe. The DG2 and PTL-H receipts each cover one ComfyUI Z-Image
+Turbo INT8 graph; they do not establish complete model coverage or performance
 parity. LNL remains a future target direction and requires its own
 implementation and device validation.
 
