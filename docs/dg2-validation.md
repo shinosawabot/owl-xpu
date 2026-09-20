@@ -25,8 +25,8 @@ capabilities, skipped the unavailable CuTe attention backend, and applied the
 INT8 FFN adapter.
 
 The exact graph was
-`bmg-image-validation-trace/zimage-int8-convrot-api.json` from the committed
-ComfyUI validation template. Its SHA256 is
+[`workflows/zimage-turbo-int8-convrot-api.json`](../workflows/zimage-turbo-int8-convrot-api.json),
+the OWL-owned copy of the committed ComfyUI validation template. Its SHA256 is
 `7fcd865a3cd5e2819ca7b520fe8c375567eec7d81227825e1984d741a128ac2e`. It used
 the following model identities:
 

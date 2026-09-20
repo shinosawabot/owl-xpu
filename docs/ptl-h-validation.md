@@ -41,8 +41,8 @@ The wheel contains the PTL-H core `_C`, `cute_fmha_torch`, and the
 - LGRF BF16 D128 `[1,64,8,128]` through `omni_xpu_kernel.sdp.sdp`: finite
   output, maximum absolute error `0.0078125` against Torch SDPA.
 
-The workflow was the committed
-`bmg-image-validation-trace/zimage-int8-convrot-api.json`, SHA256
+The workflow was the OWL-owned
+[`workflows/zimage-turbo-int8-convrot-api.json`](../workflows/zimage-turbo-int8-convrot-api.json), SHA256
 `7fcd865a3cd5e2819ca7b520fe8c375567eec7d81227825e1984d741a128ac2e`. It used
 1024×1024, batch size 1, CFG 1, 8 `res_multistep` steps and seed
 `123456789` with these read-only model files:

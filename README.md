@@ -31,6 +31,14 @@ moving branch or downloads an unpinned replacement implementation.
 | [components/comfy-aimdo](https://github.com/shinosawabot/comfy-aimdo) | Memory management and allocator lifecycle |
 | [components/ComfyUI_OmniXPU](https://github.com/shinosawabot/ComfyUI_OmniXPU) | Provider selection and thin ComfyUI call-site adapters |
 
+The repository keeps the assembly and its application evidence in separate
+top-level areas:
+
+- [`packaging/`](packaging/): target profiles, container builders and artifact checks.
+- [`workflows/`](workflows/): verified ComfyUI API graphs with no model weights or generated output.
+- [`blogs/`](blogs/): practical records from running those graphs with an OWL-built ComfyUI package.
+- [`docs/`](docs/): architecture, procedures, support matrices and validation receipts.
+
 ## Support and validation
 
 Ubuntu uses the OMIX image build. The planned Windows route enhances the

@@ -39,7 +39,7 @@ def inspect_sources(root: Path = ROOT) -> dict:
         if mode == "160000":
             if path not in {"components/" + name for name in SOURCES.values()}:
                 raise RuntimeError(f"Unexpected runtime submodule: {path}")
-        elif path not in {"README.md", "LICENSE", ".gitignore", ".gitmodules", "AGENTS.md"} and not path.startswith(("docs/", "packaging/")):
+        elif path not in {"README.md", "LICENSE", ".gitignore", ".gitmodules", "AGENTS.md"} and not path.startswith(("docs/", "packaging/", "workflows/", "blogs/")):
             raise RuntimeError(f"Top-level ownership violation: {path}")
     result = {}
     for key, name in SOURCES.items():

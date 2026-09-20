@@ -95,6 +95,13 @@ even with `--no-cache`; the installation and compilation stages still execute.
    the three enhancement wheels with `--no-deps`, and extract the custom-node ZIP.
 7. Run `pip check` and save the resolved Python environment.
 
+The repository's `docs/`, `workflows/` and `blogs/` trees are source-control
+assets only. They are available while the build context is prepared so source
+identity can be checked, but the final runtime stage does not copy them. The
+image contains official ComfyUI, the generated enhancement artifacts, the
+bundle manifest and the required runtime/check scripts; model files and
+workflow outputs remain host-provided.
+
 The runtime image inherits the development toolchain; slimming it is separate
 work. It excludes optional third-party custom nodes, Manager and model weights.
 The official Kitchen/AIMDO distributions remain installed alongside the provider

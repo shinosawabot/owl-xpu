@@ -1,5 +1,37 @@
 # Ownership and runtime boundaries
 
+## Repository map
+
+OWL-XPU separates source components, reproducible assembly, tested workflow
+graphs and application records:
+
+```mermaid
+flowchart TD
+    C["components/<br/>Git-pinned runtime sources"] --> P["packaging/<br/>profiles and builders"]
+    P --> R[OMIX image or enhancement bundle]
+    R --> U[ComfyUI + ComfyUI_OmniXPU]
+    U --> W["workflows/<br/>verified API graphs"]
+    W --> B["blogs/<br/>practical run records"]
+    R --> D["docs/<br/>architecture and validation receipts"]
+```
+
+The top-level directories have different ownership:
+
+| Directory | Owns | Does not own |
+| --- | --- | --- |
+| `components/` | Git submodules containing ComfyUI, native kernels, Kitchen, AIMDO and the OmniXPU adapter | Root package pins, model files or workflow results |
+| `packaging/` | Target profiles, container recipes, artifact manifests and source-admission checks | Runtime implementation code |
+| `workflows/` | ComfyUI API-format graphs that have passed a documented OWL package validation | Checkpoints, generated media, server logs or unverified experiments |
+| `blogs/` | Human-readable records of actual workflows run with an OWL-built ComfyUI environment | A second source of truth for component revisions or support status |
+| `docs/` | Architecture, procedures, support matrices and focused validation receipts | Mutable run output and local machine state |
+
+`workflows/` is the reusable input layer. A graph is admitted only after a
+validation receipt or blog records its graph hash, model identities, package
+pins, target device and result. `blogs/` is the application layer: it explains
+what was run, how the packaged environment behaved and which limits remain. The
+package profile, committed gitlinks and validation receipts remain authoritative
+for reproducibility; a blog links to them instead of duplicating ownership.
+
 ```text
 OWL-XPU (documentation, gitlinks, packaging profiles and artifact manifests)
   +-- ComfyUI: official application host (v0.35.0)
@@ -25,9 +57,10 @@ OWL does not implement this behavior. It invokes the component packaging entry
 points and records their exact gitlink revisions. The `omni_xpu_kernel` Python
 import/distribution name remains unchanged despite the repository's plural name.
 
-The superproject may track only root metadata, `docs/`, `packaging/` and component
-gitlinks. It does not vendor runtime source, local wheel/DSO files, models or
-machine-specific device ordinals. `packaging/build.py check` enforces this layout.
+The superproject may track root metadata, `docs/`, `packaging/`, `workflows/`,
+`blogs/` and component gitlinks. It does not vendor runtime source, local
+wheel/DSO files, models or machine-specific device ordinals.
+`packaging/build.py check` enforces this layout.
 Gitlinks are the only source-version authority; build manifests derive their
 component revisions from them rather than maintaining a second lock file.
 

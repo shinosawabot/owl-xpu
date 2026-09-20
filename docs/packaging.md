@@ -69,6 +69,14 @@ python3 packaging/build.py build --components comfyui --output dist/node-only
   *.log                      complete command/build output
 ```
 
+The repository-only `docs/`, `workflows/` and `blogs/` directories are not
+artifact inputs. They are used to explain, reproduce and record validation, but
+they are excluded from every wheel, provider package, `ComfyUI_OmniXPU.zip`
+archive and final OMIX runtime image. The container build stage may read the
+committed source snapshot to obtain pins; the runtime stage copies only the
+official ComfyUI checkout, generated package artifacts and the required
+launcher/check scripts.
+
 Only selected components produce artifacts. `manifest.json` exists only after
 all selected phases finish successfully. Failed builds retain their plan and
 logs; retry with a new output directory. Packaging does not run GPU kernels or

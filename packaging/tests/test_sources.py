@@ -77,6 +77,15 @@ class SourceAdmissionTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "ownership violation"):
             BUILD.inspect_sources(self.root)
 
+    def test_workflow_and_blog_assets_are_accepted(self):
+        (self.root / "workflows").mkdir()
+        (self.root / "workflows/example.json").write_text("{}\n")
+        (self.root / "blogs").mkdir()
+        (self.root / "blogs/example.md").write_text("# Example\n")
+        git(self.root, "add", "workflows", "blogs")
+        git(self.root, "commit", "-m", "add validation assets")
+        BUILD.inspect_sources(self.root)
+
 
 if __name__ == "__main__":
     unittest.main()
