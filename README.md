@@ -95,9 +95,9 @@ same-graph warm-up run.
 
 | Device | OWL image | Startup memory mode | Warm generation | Example |
 | --- | --- | --- | ---: | --- |
-| B580 / `bmg` | `owl-xpu:comfyui-0.35.0-bmg` | `--disable-dynamic-vram --lowvram --cpu-vae` | **13.775 s** | [PNG](blogs/assets/zimage-turbo-int8-owl-b580.png) |
-| A770 / `dg2` | `owl-xpu:comfyui-0.35.0-dg2-current` | `--disable-dynamic-vram` | **7.810 s** | [PNG](blogs/assets/zimage-turbo-int8-owl-dg2.png) |
-| PTL-H / Arc B390 | `owl-xpu:comfyui-0.35.0-ptl-h` | `--disable-dynamic-vram` | **12.412 s** | [PNG](blogs/assets/zimage-turbo-int8-owl-ptl-h.png) |
+| B580 / `bmg` | `owl-xpu:comfyui-0.35.0-bmg` | `--disable-dynamic-vram --lowvram --cpu-vae` | **13.775 s** | <img src="blogs/assets/zimage-turbo-int8-owl-b580.png" alt="B580 OWL-XPU example" width="256"> |
+| A770 / `dg2` | `owl-xpu:comfyui-0.35.0-dg2-current` | `--disable-dynamic-vram` | **7.810 s** | <img src="blogs/assets/zimage-turbo-int8-owl-dg2.png" alt="DG2 OWL-XPU example" width="256"> |
+| PTL-H / Arc B390 | `owl-xpu:comfyui-0.35.0-ptl-h` | `--disable-dynamic-vram` | **12.412 s** | <img src="blogs/assets/zimage-turbo-int8-owl-ptl-h.png" alt="PTL-H OWL-XPU example" width="256"> |
 
 These values are functional warm-generation records rather than a normalized
 performance benchmark: B580 required ComfyUI low-memory mode, while DG2 uses the
