@@ -47,11 +47,17 @@ prompt, model files and two-stage warm execution protocol. The timed value is
 the ComfyUI `execution_start` to `execution_success` interval after one
 same-graph warm-up run.
 
-| Device | Startup memory mode | Warm generation | Example |
-| --- | --- | ---: | --- |
-| B580 / `bmg` | `--disable-dynamic-vram` | **4.576 s** | <img src="blogs/assets/zimage-turbo-int8-owl-b580.png" alt="B580 OWL-XPU example" width="256"> |
-| A770 / `dg2` | `--disable-dynamic-vram` | **7.810 s** | <img src="blogs/assets/zimage-turbo-int8-owl-dg2.png" alt="DG2 OWL-XPU example" width="256"> |
-| PTL-H / Arc B390 | `--disable-dynamic-vram` | **12.412 s** | <img src="blogs/assets/zimage-turbo-int8-owl-ptl-h.png" alt="PTL-H OWL-XPU example" width="256"> |
+The common startup configuration for this workflow on all devices was:
+
+```bash
+--disable-dynamic-vram --listen 0.0.0.0 --port 8188 --disable-api-nodes
+```
+
+| Device | Example image | Generation time |
+| --- | --- | ---: |
+| B580 / `bmg` | <img src="blogs/assets/zimage-turbo-int8-owl-b580.png" alt="B580 OWL-XPU example" width="256"> | **4.576 s** |
+| A770 / `dg2` | <img src="blogs/assets/zimage-turbo-int8-owl-dg2.png" alt="DG2 OWL-XPU example" width="256"> | **7.810 s** |
+| PTL-H / Arc B390 | <img src="blogs/assets/zimage-turbo-int8-owl-ptl-h.png" alt="PTL-H OWL-XPU example" width="256"> | **12.412 s** |
 
 These values are functional warm-generation records rather than a normalized
 performance benchmark: all three use the same DynamicVRAM-off resident startup,
