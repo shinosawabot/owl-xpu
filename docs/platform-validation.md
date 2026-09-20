@@ -1,15 +1,16 @@
 # Platform and component validation matrix
 
-Updated 2026-09-19. This matrix describes the **committed OWL component pins**,
-not every upstream implementation or Intel GPU supported by PyTorch. Only the
-Ubuntu/B580 combination has an OWL device validation receipt. Hardware names
-are mapped to build targets, not assumed interchangeable.
+Updated 2026-09-21. This matrix describes the **committed OWL component pins**,
+not every upstream implementation or Intel GPU supported by PyTorch. Ubuntu/B580
+has the clean-image receipt; Ubuntu/DG2 has a focused core-only component and
+workflow receipt. Hardware names are mapped to build targets, not assumed
+interchangeable.
 
 ## Deployment routes
 
 | OS | Base environment | OWL enhancement route | Current delivery status |
 | --- | --- | --- | --- |
-| Ubuntu x86-64 | Digest-pinned OMIX Ubuntu 24.04 image | Compile kernels and providers, install official ComfyUI from its gitlink, then install the enhancement bundle | Implemented and validated on an Ubuntu 24.10 host with B580 |
+| Ubuntu x86-64 | Digest-pinned OMIX Ubuntu 24.04 image | Compile kernels and providers, install official ComfyUI from its gitlink, then install the enhancement bundle | Implemented; clean-image B580 and focused core-only DG2 receipts |
 | Windows x64 | Official upstream Intel portable archive | Download and pin the upstream archive, inspect its embedded Python/Torch environment, then install matching Windows wheels and OmniXPU custom node into a separate copy | Planned OWL packaging route; component Windows code exists, but no OWL Windows installer or combined device receipt yet |
 
 The official [ComfyUI README](https://github.com/Comfy-Org/ComfyUI#installing)
@@ -58,14 +59,15 @@ development image, native-library hashes and test scope. The later
 native tests; its omission of a CuTe test does not invalidate the earlier pass.
 Neither receipt establishes all CuTe/Sol-Attn routes or performance acceptance.
 
-Linux has `bmg` and `ptl-h` CuTe AOT paths; neither `dg2` nor `lnl` is declared.
-Windows CuTe is opt-in (`OMNI_XPU_REQUIRE_CUTE=1`) and explicitly restricted to
-`bmg`. These source restrictions are not device-tested “validated — not supported”
-outcomes. New OS/device combinations require their own evidence.
+Linux has `bmg` and `ptl-h` CuTe AOT paths. DG2 is declared as a core-only
+target; its CuTe and LGRF sidecars are excluded because the DG2 compiler path is
+unavailable. LNL is not declared. Windows CuTe is opt-in
+(`OMNI_XPU_REQUIRE_CUTE=1`) and explicitly restricted to `bmg`. New OS/device
+combinations require their own evidence.
 
 - [Kernel target metadata](../components/omni_xpu_kernels/omni_xpu_kernel/_version.py)
-  lists `bmg` and `ptl-h`; [setup.py](../components/omni_xpu_kernels/setup.py)
-  contains the Windows CuTe restriction. The
+  lists the target package contract; [setup.py](../components/omni_xpu_kernels/setup.py)
+  declares DG2 core-only extension selection and contains the Windows CuTe restriction. The
   [kernel policy](../components/omni_xpu_kernels/omni_xpu_kernel/policies/kernel-policy-v1.json)
   retains experimental B580 status.
 - [Kitchen provider builder](../components/comfy-kitchen/packaging/xpu_runtime_provider/build_wheel.py)
@@ -79,12 +81,17 @@ outcomes. New OS/device combinations require their own evidence.
   A generic XPU check cannot establish per-device operator support.
 - [Ubuntu/B580 receipt](omix-validation.md) records 36 RMSNorm cases, a Kitchen
   INT8 case, AIMDO residency checks and model-free ComfyUI graph execution.
+- [Ubuntu/DG2 focused receipt](dg2-validation.md) records the DG2 wheel,
+  provider/bootstrap diagnostics and one exact 1024×1024 Z-Image Turbo INT8
+  ComfyUI graph with the INT8 FFN route exercised.
 
 No matrix row establishes complete model inference correctness or performance
-improvement. AIMDO's XPU memory compiler is unsupported; tested DynamicVRAM
-functionality concerns allocator accounting and model-weight residency. Every
-new OS/device row needs its own driver/runtime identity, wheel hashes, numerical
-checks, provider diagnostics and upgrade regression results before being marked ✅ Validated.
+improvement. The DG2 receipt is a focused workflow gate and does not validate
+CuTe, LGRF or AIMDO lifecycle behavior. AIMDO's XPU memory compiler is
+unsupported; tested DynamicVRAM functionality concerns allocator accounting and
+model-weight residency. Every new OS/device row needs its own driver/runtime
+identity, wheel hashes, numerical checks, provider diagnostics and upgrade
+regression results before being marked ✅ Validated.
 
 ## ComfyUI upgrade requirement
 

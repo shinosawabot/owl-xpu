@@ -35,8 +35,9 @@ moving branch or downloads an unpinned replacement implementation.
 
 Ubuntu uses the OMIX image build. The planned Windows route enhances the
 upstream Intel portable; an OWL Windows installer is not yet available.
-**Only Ubuntu + B580 with ComfyUI 0.35.0 has passed OWL device validation.**
-The tables describe the current committed component pins (updated 2026-09-19).
+Ubuntu/B580 has the clean-image receipt, and Ubuntu/DG2 has a focused
+core-only container and ComfyUI workflow receipt. The tables describe the
+current committed component pins (updated 2026-09-21).
 
 Status indicators (always accompanied by text):
 
@@ -61,7 +62,7 @@ OMIX image build.
 | GPU / target | SYCL/ESIMD + oneDNN (`_C` / `lgrf_sdp`) | CuTe / sycl-tla (`cute_fmha_torch`) | Kitchen XPU provider | AIMDO XPU provider | ComfyUI_OmniXPU adapters | OWL package / combined validation |
 | --- | --- | --- | --- | --- | --- | --- |
 | B580 / `bmg` | ✅ Validated, 36 RMSNorm cases and 2 ESIMD SDP dtype cases; experimental B580 policy | ✅ Validated, BF16 D128 Z-Image attention correctness ([receipt](docs/b580-kernel-validation.md)); other CuTe routes/performance not covered | ✅ Validated, 40 capabilities registered; INT8 reference case tested | ✅ Validated, native hook and VBAR lifecycle | ✅ Validated, registration and diagnostic graph; conditional adapters can skip | ✅ Validated, OMIX build and both DynamicVRAM modes |
-| A770 / `dg2` | 🚫 Missing target support, no `dg2` build target in current kernel pin | 🚫 Missing `dg2` CuTe/AOT target | 📋 Target declared, unvalidated, `dg2` accepted but requires a matching companion kernel | 📋 Target declared, unvalidated, `dg2` manifest eligibility; device untested | 🧩 Implementation present, unvalidated, generic XPU discovery; incomplete companion stack | 🚫 Blocked on DG2 kernel path; no profile or receipt |
+| A770 / `dg2` | ✅ Validated, core `_C` wheel and ESIMD RMSNorm exercised; LGRF sidecar is intentionally omitted | ❌ Validated — not supported, DG2 CuTe/LGRF AOT is unavailable; ComfyUI uses PyTorch SDPA | ✅ Validated, DG2 XPU provider active and INT8 calls exercised | 📋 Target declared, not separately validated in the focused workflow | ✅ Validated, INT8 FFN adapter and DG2 attention fallback loaded | ✅ Validated, core-only DG2 profile plus the Z-Image Turbo INT8 workflow ([receipt](docs/dg2-validation.md)) |
 | PTL / `ptl-h` only | 🧩 Implementation present, unvalidated, explicit `ptl-h` build path | 🧩 `ptl-h` CuTe/AOT build path exists; device unvalidated | 📋 Target declared, unvalidated, `ptl-h` accepted | 📋 Target declared, unvalidated, `ptl-h` accepted | 🧩 Implementation present, unvalidated, target-dependent routes; device untested | ⏳ No PTL OWL profile or receipt |
 | LNL | 🚫 Missing target support, no `lnl` build target | 🚫 Missing `lnl` CuTe/AOT target | 🚫 Missing target support, no `lnl` provider target | 🚫 Missing target support, no `lnl` provider target | 🧩 Implementation present, unvalidated, generic XPU discovery is not LNL acceptance | 🚫 Blocked on target integration; no receipt |
 
@@ -83,6 +84,11 @@ provides SYCL/ESIMD and oneDNN operations, with ESIMD SDP delegated to
 CuTe FMHA and BMG Sol-Attn. See the [native architecture](docs/architecture.md#native-kernel-architecture).
 B580 has correctness evidence for both families; a passing CuTe FMHA case does
 not establish coverage of every CuTe/Sol-Attn route or a performance claim.
+
+DG2 is deliberately a core-only profile. Its wheel contains `_C`; the CuTe and
+LGRF sidecars are excluded because the DG2 compiler path does not support them.
+The ComfyUI adapter therefore keeps attention on native PyTorch SDPA while
+routing the supported INT8 ConvRot feed-forward path through OmniXPU.
 
 PTL covers only `ptl-h`. B580 kernel policy remains experimental; the validated
 scope is focused numerical checks and model-free integration, not complete
@@ -119,6 +125,15 @@ oneDNN and pinned sycl-tla headers:
 python packaging/build.py build \
   --sycl-tla /path/to/pinned/sycl-tla \
   --output dist/bmg-torch213
+```
+
+For the DG2/A770 core-only profile, use the dedicated profile and omit the
+CuTe header checkout:
+
+```bash
+python packaging/build.py build \
+  --profile packaging/profiles/dg2-torch213.json \
+  --output dist/dg2-torch213
 ```
 
 The result contains the native kernel wheel, separately packaged Kitchen/AIMDO
@@ -158,11 +173,11 @@ route enhances the official Intel portable. The
 [upgrade contract](docs/windows-portable.md#upgrade-acceptance-contract) requires
 compatible ComfyUI upgrades to preserve adapter and component behavior.
 
-This is a submodule-based assembly and a BMG/Torch 2.13 development packaging
-recipe. Packaging and model-free smoke checks do not establish model inference
-correctness, workflow benefit or support for another device.
-DG2/A770 and LNL remain future target directions;
-each requires its own implementation and device validation.
+This is a submodule-based assembly and a BMG/DG2/Torch 2.13 development
+packaging recipe. The DG2 receipt covers one ComfyUI Z-Image Turbo INT8 graph;
+it does not establish complete model coverage, CuTe support or performance
+parity. LNL remains a future target direction and requires its own
+implementation and device validation.
 
 Build and verification evidence is described in the
 [validation report](docs/omix-validation.md).
