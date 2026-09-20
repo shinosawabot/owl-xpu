@@ -23,7 +23,7 @@ def run(*args):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--tag', help='Default: owl-xpu:comfyui-<pinned host version>-<target>')
-    parser.add_argument('--xpu-target', choices=('bmg', 'dg2'), default='bmg')
+    parser.add_argument('--xpu-target', choices=('bmg', 'ptl-h', 'dg2'), default='bmg')
     parser.add_argument('--work-dir', type=Path, required=True,
                         help='New directory for the isolated build context and logs')
     parser.add_argument('--no-cache', action='store_true')
