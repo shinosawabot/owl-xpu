@@ -104,7 +104,14 @@ def build(args: argparse.Namespace, plan: dict) -> None:
     profile = plan["profile"]
     if sys.platform != profile["platform"]:
         raise RuntimeError("This recipe currently supports Linux only")
-    env = dict(os.environ, OMNI_XPU_DEVICE=profile["xpu_target"], OMNI_XPU_REQUIRE_CUTE="1")
+    require_cute = profile.get(
+        "require_cute", profile["xpu_target"] not in {"dg2"}
+    )
+    env = dict(
+        os.environ,
+        OMNI_XPU_DEVICE=profile["xpu_target"],
+        OMNI_XPU_REQUIRE_CUTE="1" if require_cute else "0",
+    )
     if "aimdo" in args.components:
         env = aimdo_build_environment(env)
     if set(args.components) != {"comfyui"}:
@@ -115,11 +122,12 @@ def build(args: argparse.Namespace, plan: dict) -> None:
         import importlib.metadata
         if importlib.metadata.version("onednn") != profile["onednn_version"]:
             raise RuntimeError("oneDNN package does not match the selected profile")
-        if not args.sycl_tla or git(args.sycl_tla, "rev-parse", "HEAD") != profile["sycl_tla_revision"]:
-            raise RuntimeError("Pass --sycl-tla pointing to the pinned sycl-tla checkout")
-        if git(args.sycl_tla, "status", "--porcelain", "--untracked-files=all"):
-            raise RuntimeError("sycl-tla checkout must be clean")
-        env["CUTLASS_SYCL_ROOT"] = str(args.sycl_tla.resolve())
+        if require_cute:
+            if not args.sycl_tla or git(args.sycl_tla, "rev-parse", "HEAD") != profile["sycl_tla_revision"]:
+                raise RuntimeError("Pass --sycl-tla pointing to the pinned sycl-tla checkout")
+            if git(args.sycl_tla, "status", "--porcelain", "--untracked-files=all"):
+                raise RuntimeError("sycl-tla checkout must be clean")
+            env["CUTLASS_SYCL_ROOT"] = str(args.sycl_tla.resolve())
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=False)
     (output / "build-plan.json").write_text(json.dumps(plan, indent=2) + "\n")

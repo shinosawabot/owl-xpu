@@ -166,12 +166,15 @@ FROM sycl-tla AS owl-build
 RUN pip install setuptools-scm==10.2.1
 COPY owl /owl
 ARG MAX_JOBS
-ENV MAX_JOBS=${MAX_JOBS} TORCH_XPU_ARCH_LIST=bmg
+ARG XPU_TARGET
+ENV MAX_JOBS=${MAX_JOBS} TORCH_XPU_ARCH_LIST=${XPU_TARGET}
 RUN python /owl/packaging/build.py build \
+    --profile /owl/packaging/profiles/${XPU_TARGET}-torch213.json \
     --sycl-tla /llm/sycl-tla --output /opt/owl-bundle
 
 # ======== Official ComfyUI plus separately installed OWL providers ========
 FROM python-base AS runtime
+ARG XPU_TARGET
 COPY --from=owl-build /owl/components/ComfyUI /opt/ComfyUI
 WORKDIR /opt/ComfyUI
 # A submodule .git file is meaningful only in its superproject. The exact source
@@ -186,7 +189,7 @@ COPY owl/packaging/container/start.sh /opt/owl/start.sh
 COPY owl/packaging/smoke_comfyui.py /opt/owl/smoke_comfyui.py
 RUN python /opt/owl/install_bundle.py && \
     pip freeze > /opt/owl-bundle/runtime-freeze.txt
-ENV OMNI_IMAGE_XPU_TARGET=bmg
+ENV OMNI_IMAGE_XPU_TARGET=${XPU_TARGET}
 EXPOSE 8188
 ENTRYPOINT ["bash", "/opt/owl/start.sh"]
 CMD ["--listen", "0.0.0.0", "--port", "8188", "--disable-api-nodes"]

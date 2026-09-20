@@ -1,0 +1,11 @@
+{
+  "profile": "dg2-torch213",
+  "platform": "linux",
+  "xpu_target": "dg2",
+  "torch_version": "2.13.0+xpu",
+  "onednn_version": "2026.0.0",
+  "comfy_aimdo_version": "0.5.3",
+  "sycl_tla_revision": "2fc09973bfdf15755090fcb0e3b6ad236408a992",
+  "require_cute": false,
+  "status": "development core-only DG2 packaging recipe; CUTE is unavailable for DG2 and device validation is required"
+}

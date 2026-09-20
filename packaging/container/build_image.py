@@ -22,13 +22,14 @@ def run(*args):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--tag', help='Default: owl-xpu:comfyui-<pinned host version>-bmg')
+    parser.add_argument('--tag', help='Default: owl-xpu:comfyui-<pinned host version>-<target>')
+    parser.add_argument('--xpu-target', choices=('bmg', 'dg2'), default='bmg')
     parser.add_argument('--work-dir', type=Path, required=True,
                         help='New directory for the isolated build context and logs')
     parser.add_argument('--no-cache', action='store_true')
     args = parser.parse_args()
     plan = module.inspect_sources(ROOT)
-    args.tag = args.tag or f"owl-xpu:comfyui-{module.host_identity(ROOT)['host_version']}-bmg"
+    args.tag = args.tag or f"owl-xpu:comfyui-{module.host_identity(ROOT)['host_version']}-{args.xpu_target}"
     work = args.work_dir.resolve()
     work.mkdir(parents=True, exist_ok=False)
     context = work / 'context'
@@ -43,6 +44,7 @@ def main():
     # Clone generates new configs; user/global credential files are never copied.
     shutil.copyfile(ROOT / 'packaging/container/Dockerfile', context / 'Dockerfile')
     command = ['docker', 'build', '--progress=plain', '--tag', args.tag,
+               '--build-arg', 'XPU_TARGET=' + args.xpu_target,
                '--build-arg', 'http_proxy', '--build-arg', 'https_proxy', '--build-arg', 'no_proxy']
     if args.no_cache:
         command.append('--no-cache')
