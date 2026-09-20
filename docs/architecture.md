@@ -22,7 +22,7 @@ The top-level directories have different ownership:
 | `components/` | Git submodules containing ComfyUI, native kernels, Kitchen, AIMDO and the OmniXPU adapter | Root package pins, model files or workflow results |
 | `packaging/` | Target profiles, container recipes, artifact manifests and source-admission checks | Runtime implementation code |
 | `workflows/` | ComfyUI API-format graphs that have passed a documented OWL package validation | Checkpoints, generated media, server logs or unverified experiments |
-| `blogs/` | Human-readable records of actual workflows run with an OWL-built ComfyUI environment | A second source of truth for component revisions or support status |
+| `blogs/` | Human-readable records of actual workflows run with an OWL-built ComfyUI environment, plus small generated sample assets | Model weights, credentials, machine-local logs or a second source of truth for component revisions or support status |
 | `docs/` | Architecture, procedures, support matrices and focused validation receipts | Mutable run output and local machine state |
 
 `workflows/` is the reusable input layer. A graph is admitted only after a
