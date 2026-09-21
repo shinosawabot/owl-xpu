@@ -44,8 +44,8 @@ top-level areas:
 The OWL-focused [`Z Image Turbo INT8 workflow`](workflows/zimage-turbo-int8-owl-api.json)
 and [`Qwen Image 2.1 INT8 workflow`](workflows/qwen-image-2.1-int8-owl-api.json)
 were run successfully on each currently validated Linux target with the same
-OWL prompt, their respective pinned model files and a two-stage warm execution
-protocol. The timed value is the ComfyUI `execution_start` to
+OWL-focused poster structure, model-specific title text, their respective pinned
+model files and a two-stage warm execution protocol. The timed value is the ComfyUI `execution_start` to
 `execution_success` interval after one same-graph warm-up run.
 
 The common startup configuration for both workflows on all devices was:
@@ -70,8 +70,9 @@ are in the [full OWL status record](blogs/2026-09-21-zimage-turbo-int8-owl-statu
 ### Qwen Image 2.1 INT8
 
 The [`Qwen Image 2.1 INT8 workflow`](workflows/qwen-image-2.1-int8-owl-api.json)
-uses the official INT8 template and model filenames. It keeps the same OWL
-prompt and startup configuration as the Z Image record.
+uses the official INT8 template and model filenames. It uses the same
+OWL-focused poster composition and startup configuration as the Z Image record,
+with Qwen Image 2.1 named in its title panel.
 
 |  | B580 | A770 | PTL-H |
 | --- | --- | --- | --- |
@@ -88,16 +89,17 @@ and route notes.
 
 DynamicVRAM is currently recommended as an explicit opt-in for memory-pressure
 workflows such as MiniMax H3. Keep it disabled by default for ordinary image
-workflows when resident weights fit; the B580 run's default DynamicVRAM VBAR
-fault makes target-specific validation necessary before enabling it.
+workflows when resident weights fit; an earlier B580 DynamicVRAM validation
+run hit a VBAR fault, so enabling it still requires target-specific validation.
 
 ## Support and validation
 
 Ubuntu uses the OMIX image build. The planned Windows route enhances the
 upstream Intel portable; an OWL Windows installer is not yet available.
-Ubuntu/B580 has the clean-image receipt. Ubuntu/DG2 and Ubuntu/PTL-H have
-focused container and ComfyUI workflow receipts. The tables describe the
-current committed component pins (updated 2026-09-21).
+Ubuntu/B580 has a historical clean-image receipt for ComfyUI 0.35.0, while the
+current ComfyUI 0.37.0 workflow records are shown above. Ubuntu/DG2 and
+Ubuntu/PTL-H have focused container and ComfyUI workflow receipts. The tables
+describe the current committed component pins (updated 2026-09-21).
 
 Status indicators (always accompanied by text):
 
@@ -121,9 +123,9 @@ OMIX image build.
 
 | GPU / target | SYCL/ESIMD + oneDNN (`_C` / `lgrf_sdp`) | CuTe / sycl-tla (`cute_fmha_torch`) | Kitchen XPU provider | AIMDO XPU provider | ComfyUI_OmniXPU adapters | OWL package / combined validation |
 | --- | --- | --- | --- | --- | --- | --- |
-| B580 / `bmg` | ✅ Validated, 36 RMSNorm cases and 2 ESIMD SDP dtype cases; experimental B580 policy | ✅ Validated, BF16 D128 Z-Image attention correctness ([receipt](docs/b580-kernel-validation.md)); other CuTe routes/performance not covered | ✅ Validated, 40 capabilities registered; INT8 reference case tested | ✅ Validated, native hook and VBAR lifecycle | ✅ Validated, registration and diagnostic graph; conditional adapters can skip | ✅ Validated, OMIX build and Z Image Turbo plus Qwen Image 2.1 INT8 workflows ([Qwen record](blogs/2026-09-21-qwen-image-2.1-int8-owl-status.md)) |
-| A770 / `dg2` | ✅ Validated, core `_C` wheel and ESIMD RMSNorm exercised; LGRF sidecar is intentionally omitted | ❌ Validated — not supported, DG2 CuTe/LGRF AOT is unavailable; ComfyUI uses PyTorch SDPA | ✅ Validated, DG2 XPU provider active and INT8 calls exercised | 📋 Target declared, not separately validated in the focused workflow | ✅ Validated, INT8 FFN adapter and DG2 attention fallback loaded | ✅ Validated, core-only DG2 profile plus Z Image Turbo and Qwen Image 2.1 INT8 workflows ([receipt](docs/dg2-validation.md), [Qwen record](blogs/2026-09-21-qwen-image-2.1-int8-owl-status.md)) |
-| PTL / `ptl-h` only | ✅ Validated, PTL-H core and LGRF numerical smoke | ✅ Validated, PTL-H CUTE D128 smoke and workflow attention calls | ✅ Validated, PTL-H provider and fused INT8 ConvRot workflow | ✅ Validated, PTL-H provider startup; fused workflow gate uses resident weights | ✅ Validated, PTL-H CUTE, RMSNorm and INT8 FFN adapters | ✅ Validated, PTL-H Torch 2.13 image and Z Image Turbo plus Qwen Image 2.1 INT8 workflows ([receipt](docs/ptl-h-validation.md), [Qwen record](blogs/2026-09-21-qwen-image-2.1-int8-owl-status.md)) |
+| B580 / `bmg` | ✅ Validated, 36 RMSNorm cases and 2 ESIMD SDP dtype cases; experimental B580 policy | ✅ Validated, BF16 D128 Z-Image attention correctness ([receipt](docs/b580-kernel-validation.md)); other CuTe routes/performance not covered | ✅ Validated, 40 capabilities registered; INT8 reference case tested | ✅ Validated, native hook and VBAR lifecycle | ✅ Validated, registration and diagnostic graph; conditional adapters can skip | ✅ Validated, OMIX clean-image receipt plus current Z Image Turbo and Qwen Image 2.1 INT8 workflows ([Z record](blogs/2026-09-21-zimage-turbo-int8-owl-status.md), [Qwen record](blogs/2026-09-21-qwen-image-2.1-int8-owl-status.md)) |
+| A770 / `dg2` | ✅ Validated, core `_C` wheel and ESIMD RMSNorm exercised; LGRF sidecar is intentionally omitted | ❌ Validated — not supported, DG2 CuTe/LGRF AOT is unavailable; ComfyUI uses PyTorch SDPA | ✅ Validated, DG2 XPU provider active and INT8 calls exercised | 📋 Target declared, not separately validated in the focused workflow | ✅ Validated, INT8 FFN adapter and DG2 attention fallback loaded | ✅ Validated, core-only DG2 profile plus current Z Image Turbo and Qwen Image 2.1 INT8 workflows ([historical receipt](docs/dg2-validation.md), [Z record](blogs/2026-09-21-zimage-turbo-int8-owl-status.md), [Qwen record](blogs/2026-09-21-qwen-image-2.1-int8-owl-status.md)) |
+| PTL / `ptl-h` only | ✅ Validated, PTL-H core and LGRF numerical smoke | ✅ Validated, PTL-H CUTE D128 smoke and workflow attention calls | ✅ Validated, PTL-H provider and fused INT8 ConvRot workflow | ✅ Validated, PTL-H provider startup; fused workflow gate uses resident weights | ✅ Validated, PTL-H CUTE, RMSNorm and INT8 FFN adapters | ✅ Validated, PTL-H Torch 2.13 image and current Z Image Turbo plus Qwen Image 2.1 INT8 workflows ([historical receipt](docs/ptl-h-validation.md), [Z record](blogs/2026-09-21-zimage-turbo-int8-owl-status.md), [Qwen record](blogs/2026-09-21-qwen-image-2.1-int8-owl-status.md)) |
 | LNL | 🚫 Missing target support, no `lnl` build target | 🚫 Missing `lnl` CuTe/AOT target | 🚫 Missing target support, no `lnl` provider target | 🚫 Missing target support, no `lnl` provider target | 🧩 Implementation present, unvalidated, generic XPU discovery is not LNL acceptance | 🚫 Blocked on target integration; no receipt |
 
 ### Windows
@@ -162,8 +164,8 @@ the [Ubuntu/B580 validation report](docs/omix-validation.md), and the
 
 ## Checkout
 
-The OWL superproject and four enhancement repositories are private; the
-authenticated account needs read access to them. Official ComfyUI is public.
+The OWL superproject and its four enhancement repositories are public.
+Official ComfyUI is public as well.
 
 ```bash
 git clone https://github.com/shinosawabot/owl-xpu.git

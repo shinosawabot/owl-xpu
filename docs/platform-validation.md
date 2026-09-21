@@ -110,7 +110,10 @@ Ubuntu upgrades advance only the official ComfyUI gitlink first and build a
 candidate image. Packaging reads the version from that pinned source, records
 its version-file SHA256, and verifies that identity at installation. API smoke
 checks derive their expected version from the selected host instead of fixing
-all future builds to 0.35.0. The current *validated* version is still 0.35.0.
+all future builds to one release. The current committed ComfyUI pin is 0.37.0;
+the historical clean-image receipt remains on 0.35.0, while the current Z Image
+Turbo and Qwen Image 2.1 workflow records validate 0.37.0 on the three listed
+Linux targets.
 
 Windows upgrades replace the upstream portable base in a separate directory,
 then reapply the compatible enhancement bundle. Keep the previous installation
@@ -124,8 +127,8 @@ or runtime ABI changes is implied.
 On 2026-09-19, eight packaging-control tests passed, including synthetic host
 version changes and version-file hashing. A custom-node-only package recorded
 the selected host identity. An isolated installer fixture accepted the matching
-0.35.0 host and rejected an altered version file before installation. The
-updated verifier also passed the existing Ubuntu/B580 image's native/provider
+historical 0.35.0 host and rejected an altered version file before installation.
+The updated verifier also passed the existing Ubuntu/B580 image's native/provider
 checks and both DynamicVRAM diagnostic workflows.
 
 These are regression checks for the packaging/version-handling change. The

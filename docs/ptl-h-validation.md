@@ -6,7 +6,7 @@ This receipt covers the explicit `ptl-h` target on an Intel Arc B390 device. It
 is a focused native and ComfyUI workflow validation; it is not a performance
 acceptance result or a claim of complete model coverage.
 
-The test host was `sas@10.239.141.0`, Ubuntu 24.04.4, kernel
+The test host was an internal Ubuntu 24.04.4 system, kernel
 `7.0.0-28-generic`. The GPU was PCI `0000:00:02.0`, device ID `8086:b080`,
 using the `xe` driver. Inside the digest-pinned OMIX base,
 `sycl-ls --verbose` reported `Intel(R) Arc(TM) B390 GPU` and

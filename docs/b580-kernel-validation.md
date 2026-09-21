@@ -45,9 +45,8 @@ does not claim the two images contain identical binaries.
 
 ## Retained evidence
 
-Raw evidence remains outside Git under
-`/home/xiangyu/workspace/omni-local/artifacts/`. SHA256 values identify the files
-reviewed for this receipt:
+Raw evidence remains outside Git on the validation host. SHA256 values identify
+the files reviewed for this receipt:
 
 | File | SHA256 |
 | --- | --- |

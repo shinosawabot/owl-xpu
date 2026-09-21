@@ -75,5 +75,7 @@ Required release checks for each upgrade:
 
 The existing automated OWL smoke check covers provider registration and the
 model-free diagnostic graph. It does not yet automate the complete adapter
-inventory comparison or model workflow upgrade suite. No newer ComfyUI version
-or Windows portable upgrade has been accepted by the current 0.35.0/B580 receipt.
+inventory comparison or model workflow upgrade suite. The historical 0.35.0/B580
+clean-image receipt remains the clean-image baseline; ComfyUI 0.37.0 is covered
+by current Linux workflow records, and no Windows portable upgrade has been
+accepted.

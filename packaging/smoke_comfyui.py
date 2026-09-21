@@ -17,7 +17,7 @@ def main():
     parser.add_argument('--url', default='http://127.0.0.1:8188')
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--require-aimdo', action='store_true')
-    parser.add_argument('--expected-comfyui-version', default='0.35.0')
+    parser.add_argument('--expected-comfyui-version', default='0.37.0')
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=False)
     opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))

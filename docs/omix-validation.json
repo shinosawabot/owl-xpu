@@ -70,7 +70,7 @@
     "errors": []
   },
   "allocator_mode": "native_hook",
-  "raw_evidence_directory": "/home/xiangyu/workspace/omni-local/owl-omix-clean",
+  "raw_evidence_directory": "outside Git on the validation host",
   "limits": [
     "No model generation workflow or quality/performance claim",
     "B580 only",

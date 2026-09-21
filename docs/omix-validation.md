@@ -46,8 +46,7 @@ See the [machine-readable summary](omix-validation.json) for source pins,
 artifact hashes and provider state, and [the reproducible procedure](omix-container.md)
 for build, run, verify and export commands.
 
-Raw evidence on the validation machine is retained outside Git at
-`/home/xiangyu/workspace/omni-local/owl-omix-clean/`:
+Raw evidence on the validation machine is retained outside Git:
 
 - `build.log`, `image-inspect.json`, `base-probe.txt`, `packaging-tests.log`
 - `bundle/`: three wheels, custom-node ZIP, manifest and Python environment freeze

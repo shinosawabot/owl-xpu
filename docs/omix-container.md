@@ -8,11 +8,12 @@ macOS are outside the currently validated environment.
 
 This recipe starts with the official OMIX development base, creates its own
 Python environment, compiles oneDNN and all OWL native components, and installs
-the resulting enhancement bundle into official ComfyUI 0.35.0. It does not use
+the resulting enhancement bundle into the current official ComfyUI gitlink
+(currently v0.37.0). It does not use
 `omni-local:kernel-dev` or copy its prebuilt libraries.
 
-The first complete clean-build result is recorded in the
-[validation report](omix-validation.md).
+The first complete clean-build result, using the earlier v0.35.0 pin, is
+recorded in the [historical validation report](omix-validation.md).
 For other OS/device combinations and independent ComfyUI upgrades, see the
 [platform matrix](platform-validation.md). A new host version is recorded from
 its committed submodule source; it is not automatically marked validated.
@@ -36,7 +37,7 @@ provider preload and DynamicVRAM ordering in `omni/entrypoints/start_comfyui.sh`
 | oneDNN compiled source | `03c022d3ffdcee958cfacbe720048e725fdf644c` |
 | oneDNN patch SHA256 | `0a7afff4134f115b4bc53f46301ca3d62b1c11dc02e32c64635c469769fcdaeb` |
 | sycl-tla headers | `2fc09973bfdf15755090fcb0e3b6ad236408a992` |
-| Official ComfyUI | gitlink `40c4fcdf513a4523e39d54a9d391908af8df8171` (`v0.35.0`) |
+| Official ComfyUI | current gitlink `73c9bad4d21e7addbe1d13bc92eee0f1431b017d` (`v0.37.0`) |
 | Official Kitchen / AIMDO | `0.2.33` / `0.5.3` |
 | Enhancement sources | Four committed OWL gitlinks, recorded in the bundle manifest |
 
@@ -62,14 +63,14 @@ git submodule update --init
 python3 packaging/build.py check
 python3 packaging/container/build_image.py \
   --no-cache --work-dir /absolute/path/to/new-build-directory \
-  --tag owl-xpu:comfyui-0.35.0-bmg
+  --tag owl-xpu:comfyui-0.37.0-bmg
 ```
 
 Commit intended OWL changes before invoking the build: dirty source trees and
 uncommitted gitlinks are rejected. The helper clones committed sources locally
 into an isolated context; it does not copy `~/.git-credentials`, host venvs,
-previous build outputs or global Git configuration. Private submodules must be
-initialized on the host first. The Docker build receives no GitHub token.
+previous build outputs or global Git configuration. All required submodules must
+be initialized on the host first. The Docker build receives no GitHub token.
 `http_proxy`, `https_proxy` and `no_proxy`, if present, are forwarded as Docker's
 standard proxy build arguments. They are not written as image `ENV` settings.
 
@@ -118,7 +119,7 @@ matching UUID from Torch under the requested affinity mask.
 
 ```bash
 python3 packaging/container/verify_image.py \
-  --image owl-xpu:comfyui-0.35.0-bmg \
+  --image owl-xpu:comfyui-0.37.0-bmg \
   --pci 0000:03:00.0 --ze-affinity 0 \
   --output /absolute/path/to/new-validation-directory
 ```
@@ -143,7 +144,7 @@ For interactive local use after validation:
 ```bash
 docker run --rm --name owl-comfyui --device /dev/dri \
   -e ZE_AFFINITY_MASK=0 -p 127.0.0.1:8188:8188 \
-  owl-xpu:comfyui-0.35.0-bmg
+  owl-xpu:comfyui-0.37.0-bmg
 ```
 
 The entrypoint enables DynamicVRAM by default and prepares the verified AIMDO
@@ -154,7 +155,7 @@ mounted into the corresponding directories under `/opt/ComfyUI`.
 To export the enhancement artifacts and receipts without starting the app:
 
 ```bash
-container_id=$(docker create owl-xpu:comfyui-0.35.0-bmg)
+container_id=$(docker create owl-xpu:comfyui-0.37.0-bmg)
 docker cp "$container_id:/opt/owl-bundle" ./owl-bundle
 docker cp "$container_id:/llm/manifests/onednn-runtime.env" ./onednn-runtime.env
 docker rm "$container_id"

@@ -34,7 +34,7 @@ for reproducibility; a blog links to them instead of duplicating ownership.
 
 ```text
 OWL-XPU (documentation, gitlinks, packaging profiles and artifact manifests)
-  +-- ComfyUI: official application host (v0.35.0)
+  +-- ComfyUI: official application host (v0.37.0)
   +-- ComfyUI_OmniXPU: prestartup selection and ComfyUI-specific adapters
   +-- comfy-kitchen: common operator interfaces and per-call dispatch
   +-- comfy-aimdo: allocator and model-weight lifecycle
