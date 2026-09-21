@@ -13,9 +13,7 @@ The components must be installed as one exact source combination:
    AOT image and selects the LNL LGRF/CuTe configurations. DG2 remains a
    separate core-only path because its CuTe/LGRF compiler path is unsupported.
 2. `comfy-kitchen` and `comfy-aimdo` provider wheel manifests accept `lnl`
-   while retaining their Windows platform contracts. Kitchen uses its reference
-   dequantization/matmul fallback for LNL SVDQuant when native oneDNN int4 is
-   unavailable.
+   while retaining their Windows platform contracts.
 3. `ComfyUI_OmniXPU` activates a provider only when its manifest lists `lnl`;
    the installed Omni wheel and core AOT marker must also report `lnl`.
 4. ComfyUI stays on the official host branch. The OWL custom node is layered
