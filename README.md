@@ -42,12 +42,13 @@ top-level areas:
 ## Current status
 
 The OWL-focused [`Z Image Turbo INT8 workflow`](workflows/zimage-turbo-int8-owl-api.json)
-was run successfully on each currently validated Linux target with the same
-prompt, model files and two-stage warm execution protocol. The timed value is
-the ComfyUI `execution_start` to `execution_success` interval after one
-same-graph warm-up run.
+and [`Qwen Image 2.1 INT8 workflow`](workflows/qwen-image-2.1-int8-owl-api.json)
+were run successfully on each currently validated Linux target with the same
+OWL prompt, their respective pinned model files and a two-stage warm execution
+protocol. The timed value is the ComfyUI `execution_start` to
+`execution_success` interval after one same-graph warm-up run.
 
-The common startup configuration for this workflow on all devices was:
+The common startup configuration for both workflows on all devices was:
 
 ```bash
 --disable-dynamic-vram --listen 0.0.0.0 --port 8188 --disable-api-nodes
@@ -65,6 +66,25 @@ while DG2 uses the core-only PyTorch SDPA attention path and PTL-H uses CUTE
 attention. The complete
 prompt, graph hash, model hashes, image identities, output hashes and route notes
 are in the [full OWL status record](blogs/2026-09-21-zimage-turbo-int8-owl-status.md).
+
+### Qwen Image 2.1 INT8
+
+The [`Qwen Image 2.1 INT8 workflow`](workflows/qwen-image-2.1-int8-owl-api.json)
+uses the official INT8 template and model filenames. It keeps the same OWL
+prompt and startup configuration as the Z Image record.
+
+|  | B580 | A770 | PTL-H |
+| --- | --- | --- | --- |
+| Device | B580 / `bmg` | A770 / `dg2` | PTL-H / Arc B390 |
+| Example image | <img src="blogs/assets/qwen-image-2.1-int8-owl-b580.png" alt="B580 Qwen Image 2.1 OWL-XPU example" width="256"> | <img src="blogs/assets/qwen-image-2.1-int8-owl-dg2.png" alt="DG2 Qwen Image 2.1 OWL-XPU example" width="256"> | <img src="blogs/assets/qwen-image-2.1-int8-owl-ptl-h.png" alt="PTL-H Qwen Image 2.1 OWL-XPU example" width="256"> |
+| Generation time | **17.373 s** | **27.133 s** | **51.542 s** |
+
+These are functional warm-generation records for the 1024×1024, 25-step Euler
+graph. DG2 uses core-only PyTorch SDPA; B580 and PTL-H load CUTE but fall back
+for the Qwen attention shape that is outside the current CUTE support set. The
+[full Qwen Image 2.1 status record](blogs/2026-09-21-qwen-image-2.1-int8-owl-status.md)
+contains the package identities, model hashes, image identities, output hashes
+and route notes.
 
 DynamicVRAM is currently recommended as an explicit opt-in for memory-pressure
 workflows such as MiniMax H3. Keep it disabled by default for ordinary image
@@ -101,9 +121,9 @@ OMIX image build.
 
 | GPU / target | SYCL/ESIMD + oneDNN (`_C` / `lgrf_sdp`) | CuTe / sycl-tla (`cute_fmha_torch`) | Kitchen XPU provider | AIMDO XPU provider | ComfyUI_OmniXPU adapters | OWL package / combined validation |
 | --- | --- | --- | --- | --- | --- | --- |
-| B580 / `bmg` | ✅ Validated, 36 RMSNorm cases and 2 ESIMD SDP dtype cases; experimental B580 policy | ✅ Validated, BF16 D128 Z-Image attention correctness ([receipt](docs/b580-kernel-validation.md)); other CuTe routes/performance not covered | ✅ Validated, 40 capabilities registered; INT8 reference case tested | ✅ Validated, native hook and VBAR lifecycle | ✅ Validated, registration and diagnostic graph; conditional adapters can skip | ✅ Validated, OMIX build and both DynamicVRAM modes |
-| A770 / `dg2` | ✅ Validated, core `_C` wheel and ESIMD RMSNorm exercised; LGRF sidecar is intentionally omitted | ❌ Validated — not supported, DG2 CuTe/LGRF AOT is unavailable; ComfyUI uses PyTorch SDPA | ✅ Validated, DG2 XPU provider active and INT8 calls exercised | 📋 Target declared, not separately validated in the focused workflow | ✅ Validated, INT8 FFN adapter and DG2 attention fallback loaded | ✅ Validated, core-only DG2 profile plus the Z-Image Turbo INT8 workflow ([receipt](docs/dg2-validation.md)) |
-| PTL / `ptl-h` only | ✅ Validated, PTL-H core and LGRF numerical smoke | ✅ Validated, PTL-H CUTE D128 smoke and workflow attention calls | ✅ Validated, PTL-H provider and fused INT8 ConvRot workflow | ✅ Validated, PTL-H provider startup; fused workflow gate uses resident weights | ✅ Validated, PTL-H CUTE, RMSNorm and INT8 FFN adapters | ✅ Validated, PTL-H Torch 2.13 image and Z-Image Turbo INT8 workflow ([receipt](docs/ptl-h-validation.md)) |
+| B580 / `bmg` | ✅ Validated, 36 RMSNorm cases and 2 ESIMD SDP dtype cases; experimental B580 policy | ✅ Validated, BF16 D128 Z-Image attention correctness ([receipt](docs/b580-kernel-validation.md)); other CuTe routes/performance not covered | ✅ Validated, 40 capabilities registered; INT8 reference case tested | ✅ Validated, native hook and VBAR lifecycle | ✅ Validated, registration and diagnostic graph; conditional adapters can skip | ✅ Validated, OMIX build and Z Image Turbo plus Qwen Image 2.1 INT8 workflows ([Qwen record](blogs/2026-09-21-qwen-image-2.1-int8-owl-status.md)) |
+| A770 / `dg2` | ✅ Validated, core `_C` wheel and ESIMD RMSNorm exercised; LGRF sidecar is intentionally omitted | ❌ Validated — not supported, DG2 CuTe/LGRF AOT is unavailable; ComfyUI uses PyTorch SDPA | ✅ Validated, DG2 XPU provider active and INT8 calls exercised | 📋 Target declared, not separately validated in the focused workflow | ✅ Validated, INT8 FFN adapter and DG2 attention fallback loaded | ✅ Validated, core-only DG2 profile plus Z Image Turbo and Qwen Image 2.1 INT8 workflows ([receipt](docs/dg2-validation.md), [Qwen record](blogs/2026-09-21-qwen-image-2.1-int8-owl-status.md)) |
+| PTL / `ptl-h` only | ✅ Validated, PTL-H core and LGRF numerical smoke | ✅ Validated, PTL-H CUTE D128 smoke and workflow attention calls | ✅ Validated, PTL-H provider and fused INT8 ConvRot workflow | ✅ Validated, PTL-H provider startup; fused workflow gate uses resident weights | ✅ Validated, PTL-H CUTE, RMSNorm and INT8 FFN adapters | ✅ Validated, PTL-H Torch 2.13 image and Z Image Turbo plus Qwen Image 2.1 INT8 workflows ([receipt](docs/ptl-h-validation.md), [Qwen record](blogs/2026-09-21-qwen-image-2.1-int8-owl-status.md)) |
 | LNL | 🚫 Missing target support, no `lnl` build target | 🚫 Missing `lnl` CuTe/AOT target | 🚫 Missing target support, no `lnl` provider target | 🚫 Missing target support, no `lnl` provider target | 🧩 Implementation present, unvalidated, generic XPU discovery is not LNL acceptance | 🚫 Blocked on target integration; no receipt |
 
 ### Windows
@@ -224,9 +244,10 @@ route enhances the official Intel portable. The
 compatible ComfyUI upgrades to preserve adapter and component behavior.
 
 This is a submodule-based assembly and a BMG/DG2/PTL-H/Torch 2.13 development
-packaging recipe. The DG2 and PTL-H receipts each cover one ComfyUI Z-Image
-Turbo INT8 graph; they do not establish complete model coverage or performance
-parity. LNL remains a future target direction and requires its own
+packaging recipe. The DG2 and PTL-H receipts and workflow records cover the
+validated Z Image Turbo and Qwen Image 2.1 INT8 graphs; they do not establish
+complete model coverage or performance parity. LNL remains a future target
+direction and requires its own
 implementation and device validation.
 
 Build and verification evidence is described in the
