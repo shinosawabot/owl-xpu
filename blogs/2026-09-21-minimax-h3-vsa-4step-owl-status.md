@@ -1,9 +1,10 @@
 # MiniMax H3 VSA 4-step OWL status
 
 This record runs the MiniMax H3 VSA 4-step video workflow through the current
-OWL-XPU BMG package on a local Intel B580. It records a successful five-second
-video generation with the OWL-focused scene prompt, DynamicVRAM enabled for the
-memory-pressure workflow, and the current ComfyUI 0.37.0 component pins.
+OWL-XPU BMG and PTL-H packages on an Intel B580 and Arc B390. It records
+successful five-second video generation with the OWL-focused scene prompt,
+DynamicVRAM enabled for the memory-pressure workflow, and the current ComfyUI
+0.37.0 component pins.
 
 ## Workflow and prompt
 
@@ -16,6 +17,7 @@ memory-pressure workflow, and the current ComfyUI 0.37.0 component pins.
   `sink_conditioning=exact_kv_and_rows`, `extra_tokens=0`
 - MiniMax H3 sigma shift: video `12.0`, audio `3.0`
 - Warm-up seed: `556589502035082`; timed seed: `556589502035083`
+- Validated targets: B580 / `bmg` and PTL-H / `ptl-h`
 
 The exact OWL-focused prompt is:
 
@@ -38,18 +40,20 @@ The read-only model files were:
 
 ## Package and startup
 
-The package was built from the current root checkout with the BMG Torch 2.13
-profile:
+The packages were built from the current root checkout with the BMG and PTL-H
+Torch 2.13 profiles:
 
 | Component | Revision or runtime version |
 | --- | --- |
 | OWL-XPU root | `d658d79ec9dca41fdeb67bf72f79fe426341cddd` |
+| Profiles | `bmg-torch213` and `ptl-h-torch213`, both with `require_cute=true` |
 | `omni_xpu_kernels` | `4861cd02414e9e58e2368459737bd96ada21c199` |
 | `comfy-kitchen` | `e4e8ef8c241ebb8a41106355ce73eb05a2e1ddca` / runtime `0.2.35` |
 | `comfy-aimdo` | `874b805f032a213284170b6f5a2f11f6373c135d` / runtime `0.5.5` |
 | `ComfyUI_OmniXPU` | `83c26e612830c6b0b4c122e3a7525fb9fcce25d6` |
 | Official ComfyUI | `73c9bad4d21e7addbe1d13bc92eee0f1431b017d` / `0.37.0` |
-| Container image | `owl-xpu:comfyui-0.37.0-bmg-h3`, local image ID `sha256:f89892269bafedc5ea5bb6b47b80dd15dc54e3872906bd9d95746144e98abbce` |
+| B580 container image | `owl-xpu:comfyui-0.37.0-bmg-h3`, local image ID `sha256:f89892269bafedc5ea5bb6b47b80dd15dc54e3872906bd9d95746144e98abbce` |
+| PTL-H container image | `owl-xpu:comfyui-0.37.0-ptl-h-h3`, local image ID `sha256:be2ba78fe896bbf1adcced97c1b719a469e87b69872e6cf610f5c7185f15985e` |
 
 The ComfyUI container used the following runtime options in addition to the
 `/dev/dri` device and read-only model mount:
@@ -59,34 +63,45 @@ The ComfyUI container used the following runtime options in addition to the
 --enable-dynamic-vram --reserve-vram 4
 ```
 
-The container used `ZE_AFFINITY_MASK=0`, a 1 GiB shared-memory area and a
-separate output mount. This is a B580 functional record for a memory-pressure
-workflow; it does not establish MiniMax H3 support on DG2, PTL-H or LNL.
+Both containers used `ZE_AFFINITY_MASK=0`, a 1 GiB shared-memory area and a
+separate output mount. These are B580 and PTL-H functional records for a
+memory-pressure workflow; they do not establish MiniMax H3 support on DG2 or
+LNL.
 
 ## Result
 
 The API runner submitted the graph once for warm-up and once for the timed
-execution while keeping the ComfyUI service resident. The warm-up completed in
-278.110 seconds of server execution time (278.282 seconds client wall time).
-The timed execution completed in **202.238 seconds** of server execution time
-(203.061 seconds client wall time). The timed value is the ComfyUI
-`execution_start` to `execution_success` interval after warm-up.
+execution on each target while keeping the ComfyUI service resident. On B580,
+the warm-up completed in 278.110 seconds of server execution time (278.282
+seconds client wall time), and the timed execution completed in **202.238
+seconds** of server execution time (203.061 seconds client wall time). On
+PTL-H, the warm-up completed in 791.135 seconds of server execution time
+(792.302 seconds client wall time), and the timed execution completed in
+**730.301 seconds** of server execution time (730.490 seconds client wall
+time). The timed values are the ComfyUI `execution_start` to
+`execution_success` intervals after warm-up.
 
 | Device | Package and startup | Warm generation | Output SHA256 | Sample | Route and notes |
 | --- | --- | ---: | --- | --- | --- |
 | B580 / `bmg` | `owl-xpu:comfyui-0.37.0-bmg-h3`<br>`--enable-dynamic-vram --reserve-vram 4` | **202.238 s** server / 203.061 s client | `842546b4997088976ea24b42ac642f4f6265db4b35629adccd8135806913c3d7` | [Representative frame](assets/minimax-h3-vsa-4step-owl-b580.png) | H3 segmented RMS modulation and H3 sigma-shift adapters loaded. Main H3 attention used the experimental BMG D128 CUTE route (`heads=56`, `q=267`, `kv=267`); VAE decode logged the existing batch-4, sequence-1797 fallback. |
+| PTL-H / `ptl-h` | `owl-xpu:comfyui-0.37.0-ptl-h-h3`<br>`--enable-dynamic-vram --reserve-vram 4` | **730.301 s** server / 730.490 s client | `4db15785425327fe58f865461aaad660deaaaec2413bb50052a54ec1aaa3e343` | [Representative frame](assets/minimax-h3-vsa-4step-owl-ptl-h.png) | PTL-H CUTE attention executed (`heads=56`, `seq=267`). The native segmented H3 RMS adapter and complete native Sol VSA API were unavailable, so those adapters were skipped; VAE used the batch-4, sequence-1797 fallback. AIMDO emitted VBAR watermark warnings, but the graph completed. |
 
-The output was an H.264/AAC MP4 at 1344×768, 24 fps, 124 video frames,
-5.167 seconds, with two-channel 32 kHz audio. The frame stored with this record
-was extracted at 2.5 seconds from the timed output and has SHA256
-`f6c671405bb877d415cce19a17a3b25a88e80cd3e36a35d7ee3c7f4b14ca68a2`.
+Both outputs were H.264/AAC MP4 files at 1344×768, 24 fps, 124 video frames,
+5.167 seconds, with two-channel 32 kHz audio. The B580 frame stored with this
+record was extracted at 2.5 seconds from the timed output and has SHA256
+`f6c671405bb877d415cce19a17a3b25a88e80cd3e36a35d7ee3c7f4b14ca68a2`. The
+PTL-H frame has SHA256
+`5b51ff0b0ac255e61f7ced980274375b2e6a470d0111c5ce7c81d6ccc327ff4e`.
 
-The timed run completed without an execution error or out-of-memory event. The
-generated scene keeps the owl as the visual subject and contains no requested
-text, logos or watermark, so it avoids the text-rendering failure mode of the
+Both timed runs completed without an execution error or out-of-memory event.
+The generated scenes keep the owl as the visual subject and contain no requested
+text, logos or watermark, so they avoid the text-rendering failure mode of the
 earlier image examples.
 
 ## Generated example
 
 ![MiniMax H3 VSA 4-step OWL-XPU example on B580](assets/minimax-h3-vsa-4step-owl-b580.png)
 
+### PTL-H
+
+![MiniMax H3 VSA 4-step OWL-XPU example on PTL-H](assets/minimax-h3-vsa-4step-owl-ptl-h.png)

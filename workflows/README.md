@@ -19,7 +19,7 @@ receipt or in [`blogs/`](../blogs/).
 | [`zimage-turbo-int8-convrot-api.json`](zimage-turbo-int8-convrot-api.json) | 1024×1024 Z Image Turbo INT8 ConvRot image generation | DG2 core-only and PTL-H | [DG2 receipt](../docs/dg2-validation.md), [PTL-H receipt](../docs/ptl-h-validation.md), [DG2 record](../blogs/2026-09-21-zimage-turbo-int8-dg2.md), [PTL-H record](../blogs/2026-09-21-zimage-turbo-int8-ptl-h.md) |
 | [`zimage-turbo-int8-owl-api.json`](zimage-turbo-int8-owl-api.json) | The same 1024×1024 Z Image Turbo INT8 graph with an OWL-XPU engineering prompt | B580, DG2 core-only and PTL-H | [OWL status record](../blogs/2026-09-21-zimage-turbo-int8-owl-status.md) |
 | [`qwen-image-2.1-int8-owl-api.json`](qwen-image-2.1-int8-owl-api.json) | 1024×1024 Qwen Image 2.1 INT8 generation with the OWL-XPU engineering prompt | B580, DG2 core-only and PTL-H | [OWL status record](../blogs/2026-09-21-qwen-image-2.1-int8-owl-status.md) |
-| [`minimax-h3-vsa-4step-owl-api.json`](minimax-h3-vsa-4step-owl-api.json) | 1344×768 MiniMax H3 VSA 4-step video generation with an OWL-XPU scene prompt | B580 / `bmg` | [OWL status record](../blogs/2026-09-21-minimax-h3-vsa-4step-owl-status.md) |
+| [`minimax-h3-vsa-4step-owl-api.json`](minimax-h3-vsa-4step-owl-api.json) | 1344×768 MiniMax H3 VSA 4-step video generation with an OWL-XPU scene prompt | B580 / `bmg` and PTL-H / `ptl-h` | [OWL status record](../blogs/2026-09-21-minimax-h3-vsa-4step-owl-status.md) |
 
 The catalog workflow has SHA256
 `7fcd865a3cd5e2819ca7b520fe8c375567eec7d81227825e1984d741a128ac2e` and uses
@@ -52,9 +52,10 @@ The MiniMax H3 VSA 4-step OWL workflow has SHA256
 `e90ce64fd8a8d79d2b971ea8f6f7a3f81dabde5ca20c7de121b740f61bca554d`. It fixes a
 1344×768, 5-second, 124-frame graph with Euler/simple sampling, four steps,
 VSA selection at 10 percent and the H3 video/audio sigma shifts. The graph was
-validated on B580 with DynamicVRAM enabled; its exact prompt, model identities,
-package pins and representative frame are recorded in the [MiniMax H3 status
-record](../blogs/2026-09-21-minimax-h3-vsa-4step-owl-status.md).
+validated on B580 and PTL-H with DynamicVRAM enabled. The PTL-H record includes
+the unavailable native segmented H3 RMS and complete Sol VSA routes as explicit
+limitations; its exact prompt, model identities, package pins and representative
+frames are recorded in the [MiniMax H3 status record](../blogs/2026-09-21-minimax-h3-vsa-4step-owl-status.md).
 
 When changing a graph, preserve the old file when it represents an accepted
 contract or add a new filename. Re-run the affected target, calculate the new
