@@ -82,7 +82,8 @@ From another process in the same container/network namespace:
 
 ```bash
 python /owl/packaging/smoke_comfyui.py \
-  --require-aimdo --output /artifacts/dynamic-vram-smoke
+  --require-aimdo --expected-comfyui-version 0.35.0 \
+  --output /artifacts/dynamic-vram-smoke
 ```
 
 The check saves system versions, node registration, the submitted graph,
