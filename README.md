@@ -181,11 +181,17 @@ does not use. There is no need to download those for this recipe.
 
 ## Package
 
-In a prepared Linux development environment with matching Torch XPU, oneAPI,
-oneDNN and pinned sycl-tla headers:
+In a prepared Linux development environment with matching Torch XPU, oneAPI and
+oneDNN; the BMG and PTL-H commands also require pinned sycl-tla headers:
+
+All three target profiles use the same Torch/oneDNN packaging interface. BMG
+and PTL-H require the pinned sycl-tla checkout for CuTe; DG2 is deliberately a
+core-only profile and omits that argument because its profile sets
+`require_cute` to `false`.
 
 ```bash
 python packaging/build.py build \
+  --profile packaging/profiles/bmg-torch213.json \
   --sycl-tla /path/to/pinned/sycl-tla \
   --output dist/bmg-torch213
 ```

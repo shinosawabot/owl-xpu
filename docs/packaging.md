@@ -9,8 +9,12 @@ The BMG profile is `packaging/profiles/bmg-torch213.json`: Torch
 `2fc09973bfdf15755090fcb0e3b6ad236408a992`. The DG2 profile is
 `packaging/profiles/dg2-torch213.json`; it selects the same Torch/oneDNN ABI,
 sets `xpu_target` to `dg2`, and sets `require_cute` to `false` because DG2 is a
-core-only build. Use a prepared oneAPI development
-environment; the initial deployment used compiler 2026.1.0. Build inputs include
+core-only build. The PTL-H profile is
+`packaging/profiles/ptl-h-torch213.json`; it selects the same Torch/oneDNN ABI,
+sets `xpu_target` to `ptl-h`, and requires CuTe. BMG and PTL-H therefore use
+the pinned sycl-tla checkout; DG2 intentionally does not. Use a prepared
+oneAPI development environment; the initial deployment used compiler 2026.1.0.
+Build inputs include
 Python development headers, Git, a C compiler, `icpx`, Level Zero development
 libraries, Unified Runtime headers, and Python build tools from the component
 `pyproject.toml` files (including `setuptools-scm` for AIMDO).
@@ -36,6 +40,16 @@ DG2 does not require `--sycl-tla` for its core-only build:
 python packaging/build.py build \
   --profile packaging/profiles/dg2-torch213.json \
   --output dist/dg2-torch213
+```
+
+PTL-H uses the same explicit profile shape as BMG and requires the pinned
+sycl-tla checkout:
+
+```bash
+python packaging/build.py build \
+  --profile packaging/profiles/ptl-h-torch213.json \
+  --sycl-tla /path/to/pinned/sycl-tla \
+  --output dist/ptl-h-torch213
 ```
 
 `--output` must name a new directory. Existing results are never overwritten.
