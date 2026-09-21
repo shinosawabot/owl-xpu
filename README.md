@@ -87,10 +87,34 @@ for the Qwen attention shape that is outside the current CUTE support set. The
 contains the package identities, model hashes, image identities, output hashes
 and route notes.
 
+### MiniMax H3 VSA 4-step
+
+The [`MiniMax H3 VSA 4-step OWL workflow`](workflows/minimax-h3-vsa-4step-owl-api.json)
+was run successfully on the current B580 and PTL-H packages with DynamicVRAM
+enabled. The graph produces a five-second, 124-frame video with generated audio;
+the animations below are compact GIF previews of those outputs.
+
+|  | B580 | PTL-H |
+| --- | --- | --- |
+| Device | B580 / `bmg` | PTL-H / `ptl-h` |
+| Example image | <img src="blogs/assets/minimax-h3-vsa-4step-owl-b580.gif" alt="B580 MiniMax H3 VSA 4-step OWL-XPU example" width="256"> | <img src="blogs/assets/minimax-h3-vsa-4step-owl-ptl-h.gif" alt="PTL-H MiniMax H3 VSA 4-step OWL-XPU example" width="256"> |
+| Generation time | **220.362 s** | **721.356 s** |
+
+The full generated videos are available as [B580 MP4](blogs/assets/minimax-h3-vsa-4step-owl-b580.mp4) and [PTL-H MP4](blogs/assets/minimax-h3-vsa-4step-owl-ptl-h.mp4).
+
+These are functional warm-generation records after one same-graph warm-up run.
+Both use `--enable-dynamic-vram --reserve-vram 4`. PTL-H completed the graph but
+the native segmented H3 RMS and complete Sol VSA adapters were unavailable; its
+route and VBAR warnings are recorded in the [MiniMax H3 OWL status record](blogs/2026-09-21-minimax-h3-vsa-4step-owl-status.md), together with the full prompt,
+graph hash, model hashes, package identities and output hashes.
+
 DynamicVRAM is currently recommended as an explicit opt-in for memory-pressure
-workflows such as MiniMax H3. Keep it disabled by default for ordinary image
-workflows when resident weights fit; an earlier B580 DynamicVRAM validation
-run hit a VBAR fault, so enabling it still requires target-specific validation.
+workflows such as MiniMax H3. The current B580 H3 record validates
+`--enable-dynamic-vram --reserve-vram 4` on the ComfyUI 0.37.0 package, and the
+PTL-H H3 execution completed with the same startup while emitting VBAR
+watermark warnings. Keep it disabled by default for ordinary image workflows
+when resident weights fit; each other target still requires its own DynamicVRAM
+validation.
 
 ## Support and validation
 
@@ -123,9 +147,9 @@ OMIX image build.
 
 | GPU / target | SYCL/ESIMD + oneDNN (`_C` / `lgrf_sdp`) | CuTe / sycl-tla (`cute_fmha_torch`) | Kitchen XPU provider | AIMDO XPU provider | ComfyUI_OmniXPU adapters | OWL package / combined validation |
 | --- | --- | --- | --- | --- | --- | --- |
-| B580 / `bmg` | ✅ Validated, 36 RMSNorm cases and 2 ESIMD SDP dtype cases; experimental B580 policy | ✅ Validated, BF16 D128 Z-Image attention correctness ([receipt](docs/b580-kernel-validation.md)); other CuTe routes/performance not covered | ✅ Validated, 40 capabilities registered; INT8 reference case tested | ✅ Validated, native hook and VBAR lifecycle | ✅ Validated, registration and diagnostic graph; conditional adapters can skip | ✅ Validated, OMIX clean-image receipt plus current Z Image Turbo and Qwen Image 2.1 INT8 workflows ([Z record](blogs/2026-09-21-zimage-turbo-int8-owl-status.md), [Qwen record](blogs/2026-09-21-qwen-image-2.1-int8-owl-status.md)) |
+| B580 / `bmg` | ✅ Validated, 36 RMSNorm cases and 2 ESIMD SDP dtype cases; experimental B580 policy | ✅ Validated, BF16 D128 Z-Image attention correctness ([receipt](docs/b580-kernel-validation.md)); other CuTe routes/performance not covered | ✅ Validated, 40 capabilities registered; INT8 reference case tested | ✅ Validated, native hook and VBAR lifecycle | ✅ Validated, registration and diagnostic graph; conditional adapters can skip | ✅ Validated, OMIX clean-image receipt plus current Z Image Turbo, Qwen Image 2.1 INT8 and MiniMax H3 VSA workflows ([Z record](blogs/2026-09-21-zimage-turbo-int8-owl-status.md), [Qwen record](blogs/2026-09-21-qwen-image-2.1-int8-owl-status.md), [H3 record](blogs/2026-09-21-minimax-h3-vsa-4step-owl-status.md)) |
 | A770 / `dg2` | ✅ Validated, core `_C` wheel and ESIMD RMSNorm exercised; LGRF sidecar is intentionally omitted | ❌ Validated — not supported, DG2 CuTe/LGRF AOT is unavailable; ComfyUI uses PyTorch SDPA | ✅ Validated, DG2 XPU provider active and INT8 calls exercised | 📋 Target declared, not separately validated in the focused workflow | ✅ Validated, INT8 FFN adapter and DG2 attention fallback loaded | ✅ Validated, core-only DG2 profile plus current Z Image Turbo and Qwen Image 2.1 INT8 workflows ([historical receipt](docs/dg2-validation.md), [Z record](blogs/2026-09-21-zimage-turbo-int8-owl-status.md), [Qwen record](blogs/2026-09-21-qwen-image-2.1-int8-owl-status.md)) |
-| PTL / `ptl-h` only | ✅ Validated, PTL-H core and LGRF numerical smoke | ✅ Validated, PTL-H CUTE D128 smoke and workflow attention calls | ✅ Validated, PTL-H provider and fused INT8 ConvRot workflow | ✅ Validated, PTL-H provider startup; fused workflow gate uses resident weights | ✅ Validated, PTL-H CUTE, RMSNorm and INT8 FFN adapters | ✅ Validated, PTL-H Torch 2.13 image and current Z Image Turbo plus Qwen Image 2.1 INT8 workflows ([historical receipt](docs/ptl-h-validation.md), [Z record](blogs/2026-09-21-zimage-turbo-int8-owl-status.md), [Qwen record](blogs/2026-09-21-qwen-image-2.1-int8-owl-status.md)) |
+| PTL / `ptl-h` only | ✅ Validated, PTL-H core and LGRF numerical smoke | ✅ Validated, PTL-H CUTE D128 smoke and workflow attention calls | ✅ Validated, PTL-H provider and fused INT8 ConvRot workflow | ✅ Validated, PTL-H provider startup; fused workflow gate uses resident weights | ✅ Validated, PTL-H CUTE, RMSNorm and INT8 FFN adapters | ✅ Validated, PTL-H Torch 2.13 image and current Z Image Turbo, Qwen Image 2.1 INT8 and MiniMax H3 workflow execution; H3 native RMS/Sol routes remain unavailable ([historical receipt](docs/ptl-h-validation.md), [Z record](blogs/2026-09-21-zimage-turbo-int8-owl-status.md), [Qwen record](blogs/2026-09-21-qwen-image-2.1-int8-owl-status.md), [H3 record](blogs/2026-09-21-minimax-h3-vsa-4step-owl-status.md)) |
 | LNL | 🚫 Missing target support, no `lnl` build target | 🚫 Missing `lnl` CuTe/AOT target | 🚫 Missing target support, no `lnl` provider target | 🚫 Missing target support, no `lnl` provider target | 🧩 Implementation present, unvalidated, generic XPU discovery is not LNL acceptance | 🚫 Blocked on target integration; no receipt |
 
 ### Windows
@@ -253,7 +277,8 @@ compatible ComfyUI upgrades to preserve adapter and component behavior.
 
 This is a submodule-based assembly and a BMG/DG2/PTL-H/Torch 2.13 development
 packaging recipe. The DG2 and PTL-H receipts and workflow records cover the
-validated Z Image Turbo and Qwen Image 2.1 INT8 graphs; they do not establish
+validated Z Image Turbo and Qwen Image 2.1 INT8 graphs; the current B580 and
+PTL-H records also cover MiniMax H3 VSA 4-step workflow execution. These records do not establish
 complete model coverage or performance parity. LNL remains a future target
 direction and requires its own
 implementation and device validation.

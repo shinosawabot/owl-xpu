@@ -1,0 +1,271 @@
+{
+  "115": {
+    "_meta": {
+      "title": "Resolution Selector"
+    },
+    "class_type": "ResolutionSelector",
+    "inputs": {
+      "aspect_ratio": "16:9 (Widescreen)",
+      "megapixels": 0.4,
+      "multiple": 32
+    }
+  },
+  "105:6": {
+    "_meta": {
+      "title": "Load Diffusion Model"
+    },
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fastvideo_vsa_datafree_1300step_4step_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "105:9": {
+    "_meta": {
+      "title": "Basic Scheduler"
+    },
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "denoise": 1.0,
+      "model": [
+        "sol-attn-core-patch",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 4
+    }
+  },
+  "105:10": {
+    "_meta": {
+      "title": "VAE Decode"
+    },
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "105:14",
+        0
+      ],
+      "vae": [
+        "105:11",
+        0
+      ]
+    }
+  },
+  "105:11": {
+    "_meta": {
+      "title": "Load Video VAE"
+    },
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+    }
+  },
+  "105:13": {
+    "_meta": {
+      "title": "Load CLIP"
+    },
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "device": "default",
+      "type": "minimax"
+    }
+  },
+  "105:14": {
+    "_meta": {
+      "title": "Sampler Custom Advanced"
+    },
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "guider": [
+        "105:16",
+        0
+      ],
+      "latent_image": [
+        "105:104",
+        1
+      ],
+      "noise": [
+        "105:15",
+        0
+      ],
+      "sampler": [
+        "105:17",
+        0
+      ],
+      "sigmas": [
+        "105:9",
+        0
+      ]
+    }
+  },
+  "105:15": {
+    "_meta": {
+      "title": "Random Noise"
+    },
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 556589502035084
+    }
+  },
+  "105:16": {
+    "_meta": {
+      "title": "Basic Guider"
+    },
+    "class_type": "BasicGuider",
+    "inputs": {
+      "conditioning": [
+        "105:104",
+        0
+      ],
+      "model": [
+        "sol-attn-core-patch",
+        0
+      ]
+    }
+  },
+  "105:17": {
+    "_meta": {
+      "title": "KSampler Select"
+    },
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "euler"
+    }
+  },
+  "105:23": {
+    "_meta": {
+      "title": "VAE Decode Audio"
+    },
+    "class_type": "VAEDecodeAudio",
+    "inputs": {
+      "samples": [
+        "105:14",
+        0
+      ],
+      "vae": [
+        "105:24",
+        0
+      ]
+    }
+  },
+  "105:24": {
+    "_meta": {
+      "title": "Load Audio VAE"
+    },
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+    }
+  },
+  "105:91": {
+    "_meta": {
+      "title": "Create Video"
+    },
+    "class_type": "CreateVideo",
+    "inputs": {
+      "audio": [
+        "105:23",
+        0
+      ],
+      "bit_depth": 8,
+      "fps": 24,
+      "images": [
+        "105:10",
+        0
+      ]
+    }
+  },
+  "105:104": {
+    "_meta": {
+      "title": "MiniMax H3 Image to Video"
+    },
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "105:13",
+        0
+      ],
+      "height": 768,
+      "length": [
+        "105:107",
+        1
+      ],
+      "prompt": "integrated_multimodal_description: [Shot 1] Cinematic stylized 3D animation in a dark modern laboratory: a white Eurasian eagle-owl stands centered and full-body on a glowing blue Intel XPU development board. The camera begins in a centered medium-wide shot with the balanced composition of a technical project cover, then tracks forward and arcs smoothly around the owl. Brushed metal traces and cool blue light surround its talons, while blue and gold rim light reveals detailed white feathers. Across the upper third, a single wide frosted-glass title panel displays the exact uppercase text \"OWL-XPU\" in large bold white sans-serif letters. Directly below it, the same panel displays the exact smaller uppercase text \"MINIMAX H3 VSA\". On the front-right edge of the board, one compact illuminated badge displays the exact uppercase text \"4 STEP\". The owl turns its head toward the viewer, blinks once, and raises one wing as the board traces pulse gently; all other screens and panels remain blank or show only simple geometric blue lines with no legible writing. Clean negative space around the title, precise restrained materials, physically plausible feather and light motion, and a balanced centered composition suitable for an OWL-XPU technical project cover. No extra animals, watermark, or additional text.\n\noverall_soundscape: Quiet laboratory ambience, soft electrical hum from the XPU board, subtle relay clicks, light feather rustle, and one gentle owl hoot.\n\nnon_diegetic_music: Sparse celesta and restrained electronic pulses at first, joined by warm low percussion as the board traces illuminate, then resolving with a soft chime.",
+      "vae": [
+        "105:11",
+        0
+      ],
+      "width": 1344
+    }
+  },
+  "105:107": {
+    "_meta": {
+      "title": "Math Expression"
+    },
+    "class_type": "ComfyMathExpression",
+    "inputs": {
+      "expression": "max(5, round(a * 24)) + (5 - (max(5, round(a * 24)) % 17)) % 17",
+      "values.a": [
+        "105:111",
+        0
+      ]
+    }
+  },
+  "105:111": {
+    "_meta": {
+      "title": "Float (Duration)"
+    },
+    "class_type": "PrimitiveFloat",
+    "inputs": {
+      "value": 5
+    }
+  },
+  "92": {
+    "_meta": {
+      "title": "Save Video"
+    },
+    "class_type": "SaveVideo",
+    "inputs": {
+      "codec": "auto",
+      "filename_prefix": "video/owl-xpu-minimax-h3-vsa-4step",
+      "format": "auto",
+      "video": [
+        "105:91",
+        0
+      ]
+    }
+  },
+  "sol-attn-core-patch": {
+    "class_type": "BlockSparseAttention",
+    "inputs": {
+      "model": [
+        "h3-sigma-shift",
+        0
+      ],
+      "selection": "vsa",
+      "start_percent": 0.0,
+      "end_percent": 1.0,
+      "dense_blocks": "",
+      "min_tokens": 12288,
+      "extra_tokens": 0,
+      "sink_conditioning": "exact_kv_and_rows",
+      "verbose": false,
+      "selection.keep_percent": 10.0
+    },
+    "_meta": {
+      "title": "Model Sparse Attention"
+    }
+  },
+  "h3-sigma-shift": {
+    "class_type": "MiniMaxH3SigmaShift",
+    "inputs": {
+      "model": [
+        "105:6",
+        0
+      ],
+      "shift_video": 12.0,
+      "shift_audio": 3.0
+    }
+  }
+}

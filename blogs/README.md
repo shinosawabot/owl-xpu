@@ -8,8 +8,9 @@ receipts in [`docs/`](../docs/) remain the authority for validation status.
 
 Blog records are repository documentation and are excluded from wheels,
 provider packages, the `ComfyUI_OmniXPU.zip` custom-node archive and the final
-OMIX runtime image. A record may include small generated sample images under
-`assets/`; it must not contain model weights, credentials or machine-local logs.
+OMIX runtime image. A record may include small generated sample images, GIF
+previews or short source clips under `assets/`; it must not contain model
+weights, credentials or machine-local logs.
 
 ## Records
 
@@ -19,6 +20,7 @@ OMIX runtime image. A record may include small generated sample images under
 | 2026-09-21 | Z Image Turbo INT8 ConvRot | PTL-H / Arc B390 | [Run record](2026-09-21-zimage-turbo-int8-ptl-h.md) |
 | 2026-09-21 | Z Image Turbo INT8 OWL prompt | B580, DG2 / A770, PTL-H / Arc B390 | [Status record with sample images](2026-09-21-zimage-turbo-int8-owl-status.md) |
 | 2026-09-21 | Qwen Image 2.1 INT8 OWL prompt | B580, DG2 / A770, PTL-H / Arc B390 | [Status record with sample images](2026-09-21-qwen-image-2.1-int8-owl-status.md) |
+| 2026-09-21 | MiniMax H3 VSA 4-step OWL prompt | B580 / `bmg`, PTL-H / `ptl-h` | [Status record with GIF previews and source clips](2026-09-21-minimax-h3-vsa-4step-owl-status.md) |
 
 New records should link to a file under [`workflows/`](../workflows/), include
 the exact package and model identities, and state whether DynamicVRAM and
