@@ -130,7 +130,7 @@ OMIX image build.
 
 ### Windows
 
-Official Intel portable enhancement; the experimental LNL profile is documented, while OWL Windows packaging and device acceptance remain pending. See [the LNL integration profile](docs/windows-lnl-integration.md).
+Official Intel portable enhancement; the experimental LNL profile, OWL Windows packaging and device acceptance remain pending.
 
 | GPU / target | SYCL/ESIMD + oneDNN (`_C` / `lgrf_sdp`) | CuTe / sycl-tla (`cute_fmha_torch`) | Kitchen XPU provider | AIMDO XPU provider | ComfyUI_OmniXPU adapters | OWL package / combined validation |
 | --- | --- | --- | --- | --- | --- | --- |

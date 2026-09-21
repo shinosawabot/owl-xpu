@@ -85,8 +85,6 @@ still require their own evidence.
 - [Ubuntu/DG2 focused receipt](dg2-validation.md) records the DG2 wheel,
   provider/bootstrap diagnostics and one exact 1024×1024 Z-Image Turbo INT8
   ComfyUI graph with the INT8 FFN route exercised.
-- [Windows LNL integration profile](windows-lnl-integration.md) records the experimental
-  profile and its validation boundary; it is not a combined device receipt.
 - [Ubuntu/PTL-H focused receipt](ptl-h-validation.md) records the PTL-H
   core/LGRF/CUTE smoke checks, provider image and one exact 1024×1024 Z-Image
   Turbo INT8 graph with CUTE attention and fused INT8 ConvRot FFN routes
