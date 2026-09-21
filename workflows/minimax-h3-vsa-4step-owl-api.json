@@ -1,0 +1,271 @@
+{
+  "115": {
+    "_meta": {
+      "title": "Resolution Selector"
+    },
+    "class_type": "ResolutionSelector",
+    "inputs": {
+      "aspect_ratio": "16:9 (Widescreen)",
+      "megapixels": 0.4,
+      "multiple": 32
+    }
+  },
+  "105:6": {
+    "_meta": {
+      "title": "Load Diffusion Model"
+    },
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fastvideo_vsa_datafree_1300step_4step_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "105:9": {
+    "_meta": {
+      "title": "Basic Scheduler"
+    },
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "denoise": 1.0,
+      "model": [
+        "sol-attn-core-patch",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 4
+    }
+  },
+  "105:10": {
+    "_meta": {
+      "title": "VAE Decode"
+    },
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "105:14",
+        0
+      ],
+      "vae": [
+        "105:11",
+        0
+      ]
+    }
+  },
+  "105:11": {
+    "_meta": {
+      "title": "Load Video VAE"
+    },
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+    }
+  },
+  "105:13": {
+    "_meta": {
+      "title": "Load CLIP"
+    },
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "device": "default",
+      "type": "minimax"
+    }
+  },
+  "105:14": {
+    "_meta": {
+      "title": "Sampler Custom Advanced"
+    },
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "guider": [
+        "105:16",
+        0
+      ],
+      "latent_image": [
+        "105:104",
+        1
+      ],
+      "noise": [
+        "105:15",
+        0
+      ],
+      "sampler": [
+        "105:17",
+        0
+      ],
+      "sigmas": [
+        "105:9",
+        0
+      ]
+    }
+  },
+  "105:15": {
+    "_meta": {
+      "title": "Random Noise"
+    },
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 556589502035082
+    }
+  },
+  "105:16": {
+    "_meta": {
+      "title": "Basic Guider"
+    },
+    "class_type": "BasicGuider",
+    "inputs": {
+      "conditioning": [
+        "105:104",
+        0
+      ],
+      "model": [
+        "sol-attn-core-patch",
+        0
+      ]
+    }
+  },
+  "105:17": {
+    "_meta": {
+      "title": "KSampler Select"
+    },
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "euler"
+    }
+  },
+  "105:23": {
+    "_meta": {
+      "title": "VAE Decode Audio"
+    },
+    "class_type": "VAEDecodeAudio",
+    "inputs": {
+      "samples": [
+        "105:14",
+        0
+      ],
+      "vae": [
+        "105:24",
+        0
+      ]
+    }
+  },
+  "105:24": {
+    "_meta": {
+      "title": "Load Audio VAE"
+    },
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+    }
+  },
+  "105:91": {
+    "_meta": {
+      "title": "Create Video"
+    },
+    "class_type": "CreateVideo",
+    "inputs": {
+      "audio": [
+        "105:23",
+        0
+      ],
+      "bit_depth": 8,
+      "fps": 24,
+      "images": [
+        "105:10",
+        0
+      ]
+    }
+  },
+  "105:104": {
+    "_meta": {
+      "title": "MiniMax H3 Image to Video"
+    },
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "105:13",
+        0
+      ],
+      "height": 768,
+      "length": [
+        "105:107",
+        1
+      ],
+      "prompt": "integrated_multimodal_description: [Shot 1] Cinematic stylized 3D animation, a small tawny owl with a cream facial disk, amber eyes, and a cobalt-blue scarf stands on a moss-covered brass observatory branch in a moonlit forest. The camera begins in a low-angle medium-wide shot, then tracks forward and arcs smoothly around the owl. The owl spreads both wings, launches from the branch, glides past glowing astrolabes and floating fireflies, and lands on a stone perch close to camera. It turns its head toward the viewer and blinks once; feather layers, scarf, and firefly particles respond naturally to the airflow. Rich 3D materials, clear silhouette, physically plausible wing motion, volumetric blue moonlight with warm lantern rim light, shallow depth of field, feature-film-quality animation. The owl gives one soft hoot on landing. No text, logos, watermark, or extra animals.\n\noverall_soundscape: Gentle wing flaps, feather rustle, nighttime forest wind, tiny brass mechanism clicks, a soft stone landing, and one clear owl hoot.\n\nnon_diegetic_music: Sparse celesta and pizzicato strings at first, joined by warm low percussion during takeoff, then resolving with a soft chime on landing.",
+      "vae": [
+        "105:11",
+        0
+      ],
+      "width": 1344
+    }
+  },
+  "105:107": {
+    "_meta": {
+      "title": "Math Expression"
+    },
+    "class_type": "ComfyMathExpression",
+    "inputs": {
+      "expression": "max(5, round(a * 24)) + (5 - (max(5, round(a * 24)) % 17)) % 17",
+      "values.a": [
+        "105:111",
+        0
+      ]
+    }
+  },
+  "105:111": {
+    "_meta": {
+      "title": "Float (Duration)"
+    },
+    "class_type": "PrimitiveFloat",
+    "inputs": {
+      "value": 5
+    }
+  },
+  "92": {
+    "_meta": {
+      "title": "Save Video"
+    },
+    "class_type": "SaveVideo",
+    "inputs": {
+      "codec": "auto",
+      "filename_prefix": "video/owl-xpu-minimax-h3-vsa-4step",
+      "format": "auto",
+      "video": [
+        "105:91",
+        0
+      ]
+    }
+  },
+  "sol-attn-core-patch": {
+    "class_type": "BlockSparseAttention",
+    "inputs": {
+      "model": [
+        "h3-sigma-shift",
+        0
+      ],
+      "selection": "vsa",
+      "start_percent": 0.0,
+      "end_percent": 1.0,
+      "dense_blocks": "",
+      "min_tokens": 12288,
+      "extra_tokens": 0,
+      "sink_conditioning": "exact_kv_and_rows",
+      "verbose": false,
+      "selection.keep_percent": 10.0
+    },
+    "_meta": {
+      "title": "Model Sparse Attention"
+    }
+  },
+  "h3-sigma-shift": {
+    "class_type": "MiniMaxH3SigmaShift",
+    "inputs": {
+      "model": [
+        "105:6",
+        0
+      ],
+      "shift_video": 12.0,
+      "shift_audio": 3.0
+    }
+  }
+}

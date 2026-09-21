@@ -19,6 +19,7 @@ OMIX runtime image. A record may include small generated sample images under
 | 2026-09-21 | Z Image Turbo INT8 ConvRot | PTL-H / Arc B390 | [Run record](2026-09-21-zimage-turbo-int8-ptl-h.md) |
 | 2026-09-21 | Z Image Turbo INT8 OWL prompt | B580, DG2 / A770, PTL-H / Arc B390 | [Status record with sample images](2026-09-21-zimage-turbo-int8-owl-status.md) |
 | 2026-09-21 | Qwen Image 2.1 INT8 OWL prompt | B580, DG2 / A770, PTL-H / Arc B390 | [Status record with sample images](2026-09-21-qwen-image-2.1-int8-owl-status.md) |
+| 2026-09-21 | MiniMax H3 VSA 4-step OWL prompt | B580 / `bmg` | [Status record with representative frame](2026-09-21-minimax-h3-vsa-4step-owl-status.md) |
 
 New records should link to a file under [`workflows/`](../workflows/), include
 the exact package and model identities, and state whether DynamicVRAM and
