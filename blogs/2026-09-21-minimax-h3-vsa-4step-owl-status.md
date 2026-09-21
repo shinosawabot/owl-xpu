@@ -9,24 +9,24 @@ DynamicVRAM enabled for the memory-pressure workflow, and the current ComfyUI
 ## Workflow and prompt
 
 - Workflow: [`minimax-h3-vsa-4step-owl-api.json`](../workflows/minimax-h3-vsa-4step-owl-api.json)
-- Workflow SHA256: `e90ce64fd8a8d79d2b971ea8f6f7a3f81dabde5ca20c7de121b740f61bca554d`
+- Workflow SHA256: `13fe1ea15f958e33414daa3d657b867f9e93e64bea6cbf2a95b5f3c194026987`
 - Resolution: 1344×768, batch 1
 - Duration: 5 seconds, 124 frames at 24 fps
 - Diffusion sampling: `euler`, `simple`, 4 steps
 - VSA: `selection=vsa`, `selection.keep_percent=10.0`, `min_tokens=12288`,
   `sink_conditioning=exact_kv_and_rows`, `extra_tokens=0`
 - MiniMax H3 sigma shift: video `12.0`, audio `3.0`
-- Warm-up seed: `556589502035082`; timed seed: `556589502035083`
+- Warm-up seed: `556589502035084`; timed seed: `556589502035085`
 - Validated targets: B580 / `bmg` and PTL-H / `ptl-h`
 
 The exact OWL-focused prompt is:
 
 ```text
-integrated_multimodal_description: [Shot 1] Cinematic stylized 3D animation, a small tawny owl with a cream facial disk, amber eyes, and a cobalt-blue scarf stands on a moss-covered brass observatory branch in a moonlit forest. The camera begins in a low-angle medium-wide shot, then tracks forward and arcs smoothly around the owl. The owl spreads both wings, launches from the branch, glides past glowing astrolabes and floating fireflies, and lands on a stone perch close to camera. It turns its head toward the viewer and blinks once; feather layers, scarf, and firefly particles respond naturally to the airflow. Rich 3D materials, clear silhouette, physically plausible wing motion, volumetric blue moonlight with warm lantern rim light, shallow depth of field, feature-film-quality animation. The owl gives one soft hoot on landing. No text, logos, watermark, or extra animals.
+integrated_multimodal_description: [Shot 1] Cinematic stylized 3D animation in a dark modern laboratory: a white Eurasian eagle-owl stands centered and full-body on a glowing blue Intel XPU development board. The camera begins in a centered medium-wide shot with the balanced composition of a technical project cover, then tracks forward and arcs smoothly around the owl. Brushed metal traces and cool blue light surround its talons, while blue and gold rim light reveals detailed white feathers. Across the upper third, a single wide frosted-glass title panel displays the exact uppercase text "OWL-XPU" in large bold white sans-serif letters. Directly below it, the same panel displays the exact smaller uppercase text "MINIMAX H3 VSA". On the front-right edge of the board, one compact illuminated badge displays the exact uppercase text "4 STEP". The owl turns its head toward the viewer, blinks once, and raises one wing as the board traces pulse gently; all other screens and panels remain blank or show only simple geometric blue lines with no legible writing. Clean negative space around the title, precise restrained materials, physically plausible feather and light motion, and a balanced centered composition suitable for an OWL-XPU technical project cover. No extra animals, watermark, or additional text.
 
-overall_soundscape: Gentle wing flaps, feather rustle, nighttime forest wind, tiny brass mechanism clicks, a soft stone landing, and one clear owl hoot.
+overall_soundscape: Quiet laboratory ambience, soft electrical hum from the XPU board, subtle relay clicks, light feather rustle, and one gentle owl hoot.
 
-non_diegetic_music: Sparse celesta and pizzicato strings at first, joined by warm low percussion during takeoff, then resolving with a soft chime on landing.
+non_diegetic_music: Sparse celesta and restrained electronic pulses at first, joined by warm low percussion as the board traces illuminate, then resolving with a soft chime.
 ```
 
 The read-only model files were:
@@ -72,29 +72,31 @@ LNL.
 
 The API runner submitted the graph once for warm-up and once for the timed
 execution on each target while keeping the ComfyUI service resident. On B580,
-the warm-up completed in 278.110 seconds of server execution time (278.282
-seconds client wall time), and the timed execution completed in **202.238
-seconds** of server execution time (203.061 seconds client wall time). On
-PTL-H, the warm-up completed in 791.135 seconds of server execution time
-(792.302 seconds client wall time), and the timed execution completed in
-**730.301 seconds** of server execution time (730.490 seconds client wall
+the warm-up completed in 224.679 seconds of server execution time (225.621
+seconds client wall time), and the timed execution completed in **220.362
+seconds** of server execution time (220.521 seconds client wall time). On
+PTL-H, the warm-up completed in 766.025 seconds of server execution time
+(766.211 seconds client wall time), and the timed execution completed in
+**721.356 seconds** of server execution time (723.066 seconds client wall
 time). The timed values are the ComfyUI `execution_start` to
 `execution_success` intervals after warm-up.
 
 | Device | Package and startup | Warm generation | Output SHA256 | Sample | Route and notes |
 | --- | --- | ---: | --- | --- | --- |
-| B580 / `bmg` | `owl-xpu:comfyui-0.37.0-bmg-h3`<br>`--enable-dynamic-vram --reserve-vram 4` | **202.238 s** server / 203.061 s client | `842546b4997088976ea24b42ac642f4f6265db4b35629adccd8135806913c3d7` | [GIF preview](assets/minimax-h3-vsa-4step-owl-b580.gif) · [MP4](assets/minimax-h3-vsa-4step-owl-b580.mp4) | H3 segmented RMS modulation and H3 sigma-shift adapters loaded. Main H3 attention used the experimental BMG D128 CUTE route (`heads=56`, `q=267`, `kv=267`); VAE decode logged the existing batch-4, sequence-1797 fallback. |
-| PTL-H / `ptl-h` | `owl-xpu:comfyui-0.37.0-ptl-h-h3`<br>`--enable-dynamic-vram --reserve-vram 4` | **730.301 s** server / 730.490 s client | `4db15785425327fe58f865461aaad660deaaaec2413bb50052a54ec1aaa3e343` | [GIF preview](assets/minimax-h3-vsa-4step-owl-ptl-h.gif) · [MP4](assets/minimax-h3-vsa-4step-owl-ptl-h.mp4) | PTL-H CUTE attention executed (`heads=56`, `seq=267`). The native segmented H3 RMS adapter and complete native Sol VSA API were unavailable, so those adapters were skipped; VAE used the batch-4, sequence-1797 fallback. AIMDO emitted VBAR watermark warnings, but the graph completed. |
+| B580 / `bmg` | `owl-xpu:comfyui-0.37.0-bmg-h3`<br>`--enable-dynamic-vram --reserve-vram 4` | **220.362 s** server / 220.521 s client | `05b9bfebc95e70b5f2726f17598f86e73fd28749c2c5d0d99fa7cf32d148a92c` | [GIF preview](assets/minimax-h3-vsa-4step-owl-b580.gif) · [MP4](assets/minimax-h3-vsa-4step-owl-b580.mp4) | H3 segmented RMS modulation and H3 sigma-shift adapters loaded. Main H3 attention used the experimental BMG D128 CUTE route (`heads=56`, `q=335`, `kv=335`); VAE decode logged the existing batch-4, sequence-1797 fallback. |
+| PTL-H / `ptl-h` | `owl-xpu:comfyui-0.37.0-ptl-h-h3`<br>`--enable-dynamic-vram --reserve-vram 4` | **721.356 s** server / 723.066 s client | `4760ad56926d8093b5c334643ae65374698a4710b5574b12b351bbc950757319` | [GIF preview](assets/minimax-h3-vsa-4step-owl-ptl-h.gif) · [MP4](assets/minimax-h3-vsa-4step-owl-ptl-h.mp4) | PTL-H CUTE attention executed (`heads=56`, `seq=335`). The native segmented H3 RMS adapter and complete native Sol VSA API were unavailable, so those adapters were skipped; VAE used the batch-4, sequence-1797 fallback. AIMDO emitted VBAR watermark warnings, but the graph completed. |
 
 Both outputs were H.264/AAC MP4 files at 1344×768, 24 fps, 124 video frames,
 5.167 seconds, with two-channel 32 kHz audio. The B580 frame stored with this
 record was extracted at 2.5 seconds from the timed output and has SHA256
-`f6c671405bb877d415cce19a17a3b25a88e80cd3e36a35d7ee3c7f4b14ca68a2`. The
+`fc197345120717db56eb4ae58e644055e044068029180a5bfc477dc3adc00061`. The
 PTL-H frame has SHA256
-`5b51ff0b0ac255e61f7ced980274375b2e6a470d0111c5ce7c81d6ccc327ff4e`.
+`6d69b572854a6e6eb91ae5ef4e3739af3946904131af4cb65def8e521b5c3a7d`.
 The linked MP4 assets are the complete timed outputs. The GIF assets are compact
 512×292, 8 fps previews for inline documentation; the PNGs remain available as
-static reference frames.
+static reference frames. The new prompt makes the Intel XPU board, circuit traces
+and OWL-XPU technical poster the shared visual subject with the Qwen Image 2.1
+record, while keeping the H3-specific video motion and audio.
 
 Both timed runs completed without an execution error or out-of-memory event.
 The generated scenes keep the owl as the visual subject and contain no requested

@@ -49,7 +49,7 @@ CFG 1 and seed `123456789`; the exact prompt, package identities, warm execution
 method and sample images are recorded in the [Qwen Image 2.1 status record](../blogs/2026-09-21-qwen-image-2.1-int8-owl-status.md).
 
 The MiniMax H3 VSA 4-step OWL workflow has SHA256
-`e90ce64fd8a8d79d2b971ea8f6f7a3f81dabde5ca20c7de121b740f61bca554d`. It fixes a
+`13fe1ea15f958e33414daa3d657b867f9e93e64bea6cbf2a95b5f3c194026987`. It fixes a
 1344×768, 5-second, 124-frame graph with Euler/simple sampling, four steps,
 VSA selection at 10 percent and the H3 video/audio sigma shifts. The graph was
 validated on B580 and PTL-H with DynamicVRAM enabled. The PTL-H record includes

@@ -105,7 +105,7 @@
     },
     "class_type": "RandomNoise",
     "inputs": {
-      "noise_seed": 556589502035082
+      "noise_seed": 556589502035084
     }
   },
   "105:16": {
@@ -191,7 +191,7 @@
         "105:107",
         1
       ],
-      "prompt": "integrated_multimodal_description: [Shot 1] Cinematic stylized 3D animation, a small tawny owl with a cream facial disk, amber eyes, and a cobalt-blue scarf stands on a moss-covered brass observatory branch in a moonlit forest. The camera begins in a low-angle medium-wide shot, then tracks forward and arcs smoothly around the owl. The owl spreads both wings, launches from the branch, glides past glowing astrolabes and floating fireflies, and lands on a stone perch close to camera. It turns its head toward the viewer and blinks once; feather layers, scarf, and firefly particles respond naturally to the airflow. Rich 3D materials, clear silhouette, physically plausible wing motion, volumetric blue moonlight with warm lantern rim light, shallow depth of field, feature-film-quality animation. The owl gives one soft hoot on landing. No text, logos, watermark, or extra animals.\n\noverall_soundscape: Gentle wing flaps, feather rustle, nighttime forest wind, tiny brass mechanism clicks, a soft stone landing, and one clear owl hoot.\n\nnon_diegetic_music: Sparse celesta and pizzicato strings at first, joined by warm low percussion during takeoff, then resolving with a soft chime on landing.",
+      "prompt": "integrated_multimodal_description: [Shot 1] Cinematic stylized 3D animation in a dark modern laboratory: a white Eurasian eagle-owl stands centered and full-body on a glowing blue Intel XPU development board. The camera begins in a centered medium-wide shot with the balanced composition of a technical project cover, then tracks forward and arcs smoothly around the owl. Brushed metal traces and cool blue light surround its talons, while blue and gold rim light reveals detailed white feathers. Across the upper third, a single wide frosted-glass title panel displays the exact uppercase text \"OWL-XPU\" in large bold white sans-serif letters. Directly below it, the same panel displays the exact smaller uppercase text \"MINIMAX H3 VSA\". On the front-right edge of the board, one compact illuminated badge displays the exact uppercase text \"4 STEP\". The owl turns its head toward the viewer, blinks once, and raises one wing as the board traces pulse gently; all other screens and panels remain blank or show only simple geometric blue lines with no legible writing. Clean negative space around the title, precise restrained materials, physically plausible feather and light motion, and a balanced centered composition suitable for an OWL-XPU technical project cover. No extra animals, watermark, or additional text.\n\noverall_soundscape: Quiet laboratory ambience, soft electrical hum from the XPU board, subtle relay clicks, light feather rustle, and one gentle owl hoot.\n\nnon_diegetic_music: Sparse celesta and restrained electronic pulses at first, joined by warm low percussion as the board traces illuminate, then resolving with a soft chime.",
       "vae": [
         "105:11",
         0

@@ -98,7 +98,7 @@ the animations below are compact GIF previews of those outputs.
 | --- | --- | --- |
 | Device | B580 / `bmg` | PTL-H / `ptl-h` |
 | Example image | <img src="blogs/assets/minimax-h3-vsa-4step-owl-b580.gif" alt="B580 MiniMax H3 VSA 4-step OWL-XPU example" width="256"> | <img src="blogs/assets/minimax-h3-vsa-4step-owl-ptl-h.gif" alt="PTL-H MiniMax H3 VSA 4-step OWL-XPU example" width="256"> |
-| Generation time | **202.238 s** | **730.301 s** |
+| Generation time | **220.362 s** | **721.356 s** |
 
 The full generated videos are available as [B580 MP4](blogs/assets/minimax-h3-vsa-4step-owl-b580.mp4) and [PTL-H MP4](blogs/assets/minimax-h3-vsa-4step-owl-ptl-h.mp4).
 
