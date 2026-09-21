@@ -54,8 +54,8 @@ The MiniMax H3 VSA 4-step OWL workflow has SHA256
 VSA selection at 10 percent and the H3 video/audio sigma shifts. The graph was
 validated on B580 and PTL-H with DynamicVRAM enabled. The PTL-H record includes
 the unavailable native segmented H3 RMS and complete Sol VSA routes as explicit
-limitations; its exact prompt, model identities, package pins and representative
-frames are recorded in the [MiniMax H3 status record](../blogs/2026-09-21-minimax-h3-vsa-4step-owl-status.md).
+limitations; its exact prompt, model identities, package pins, GIF previews and
+source MP4s are recorded in the [MiniMax H3 status record](../blogs/2026-09-21-minimax-h3-vsa-4step-owl-status.md).
 
 When changing a graph, preserve the old file when it represents an accepted
 contract or add a new filename. Re-run the affected target, calculate the new

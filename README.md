@@ -92,13 +92,15 @@ and route notes.
 The [`MiniMax H3 VSA 4-step OWL workflow`](workflows/minimax-h3-vsa-4step-owl-api.json)
 was run successfully on the current B580 and PTL-H packages with DynamicVRAM
 enabled. The graph produces a five-second, 124-frame video with generated audio;
-the images below are representative frames from those outputs.
+the animations below are compact GIF previews of those outputs.
 
 |  | B580 | PTL-H |
 | --- | --- | --- |
 | Device | B580 / `bmg` | PTL-H / `ptl-h` |
-| Example image | <img src="blogs/assets/minimax-h3-vsa-4step-owl-b580.png" alt="B580 MiniMax H3 VSA 4-step OWL-XPU example" width="256"> | <img src="blogs/assets/minimax-h3-vsa-4step-owl-ptl-h.png" alt="PTL-H MiniMax H3 VSA 4-step OWL-XPU example" width="256"> |
+| Example image | <img src="blogs/assets/minimax-h3-vsa-4step-owl-b580.gif" alt="B580 MiniMax H3 VSA 4-step OWL-XPU example" width="256"> | <img src="blogs/assets/minimax-h3-vsa-4step-owl-ptl-h.gif" alt="PTL-H MiniMax H3 VSA 4-step OWL-XPU example" width="256"> |
 | Generation time | **202.238 s** | **730.301 s** |
+
+The full generated videos are available as [B580 MP4](blogs/assets/minimax-h3-vsa-4step-owl-b580.mp4) and [PTL-H MP4](blogs/assets/minimax-h3-vsa-4step-owl-ptl-h.mp4).
 
 These are functional warm-generation records after one same-graph warm-up run.
 Both use `--enable-dynamic-vram --reserve-vram 4`. PTL-H completed the graph but

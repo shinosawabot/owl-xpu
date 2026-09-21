@@ -83,8 +83,8 @@ time). The timed values are the ComfyUI `execution_start` to
 
 | Device | Package and startup | Warm generation | Output SHA256 | Sample | Route and notes |
 | --- | --- | ---: | --- | --- | --- |
-| B580 / `bmg` | `owl-xpu:comfyui-0.37.0-bmg-h3`<br>`--enable-dynamic-vram --reserve-vram 4` | **202.238 s** server / 203.061 s client | `842546b4997088976ea24b42ac642f4f6265db4b35629adccd8135806913c3d7` | [Representative frame](assets/minimax-h3-vsa-4step-owl-b580.png) | H3 segmented RMS modulation and H3 sigma-shift adapters loaded. Main H3 attention used the experimental BMG D128 CUTE route (`heads=56`, `q=267`, `kv=267`); VAE decode logged the existing batch-4, sequence-1797 fallback. |
-| PTL-H / `ptl-h` | `owl-xpu:comfyui-0.37.0-ptl-h-h3`<br>`--enable-dynamic-vram --reserve-vram 4` | **730.301 s** server / 730.490 s client | `4db15785425327fe58f865461aaad660deaaaec2413bb50052a54ec1aaa3e343` | [Representative frame](assets/minimax-h3-vsa-4step-owl-ptl-h.png) | PTL-H CUTE attention executed (`heads=56`, `seq=267`). The native segmented H3 RMS adapter and complete native Sol VSA API were unavailable, so those adapters were skipped; VAE used the batch-4, sequence-1797 fallback. AIMDO emitted VBAR watermark warnings, but the graph completed. |
+| B580 / `bmg` | `owl-xpu:comfyui-0.37.0-bmg-h3`<br>`--enable-dynamic-vram --reserve-vram 4` | **202.238 s** server / 203.061 s client | `842546b4997088976ea24b42ac642f4f6265db4b35629adccd8135806913c3d7` | [GIF preview](assets/minimax-h3-vsa-4step-owl-b580.gif) · [MP4](assets/minimax-h3-vsa-4step-owl-b580.mp4) | H3 segmented RMS modulation and H3 sigma-shift adapters loaded. Main H3 attention used the experimental BMG D128 CUTE route (`heads=56`, `q=267`, `kv=267`); VAE decode logged the existing batch-4, sequence-1797 fallback. |
+| PTL-H / `ptl-h` | `owl-xpu:comfyui-0.37.0-ptl-h-h3`<br>`--enable-dynamic-vram --reserve-vram 4` | **730.301 s** server / 730.490 s client | `4db15785425327fe58f865461aaad660deaaaec2413bb50052a54ec1aaa3e343` | [GIF preview](assets/minimax-h3-vsa-4step-owl-ptl-h.gif) · [MP4](assets/minimax-h3-vsa-4step-owl-ptl-h.mp4) | PTL-H CUTE attention executed (`heads=56`, `seq=267`). The native segmented H3 RMS adapter and complete native Sol VSA API were unavailable, so those adapters were skipped; VAE used the batch-4, sequence-1797 fallback. AIMDO emitted VBAR watermark warnings, but the graph completed. |
 
 Both outputs were H.264/AAC MP4 files at 1344×768, 24 fps, 124 video frames,
 5.167 seconds, with two-channel 32 kHz audio. The B580 frame stored with this
@@ -92,6 +92,9 @@ record was extracted at 2.5 seconds from the timed output and has SHA256
 `f6c671405bb877d415cce19a17a3b25a88e80cd3e36a35d7ee3c7f4b14ca68a2`. The
 PTL-H frame has SHA256
 `5b51ff0b0ac255e61f7ced980274375b2e6a470d0111c5ce7c81d6ccc327ff4e`.
+The linked MP4 assets are the complete timed outputs. The GIF assets are compact
+512×292, 8 fps previews for inline documentation; the PNGs remain available as
+static reference frames.
 
 Both timed runs completed without an execution error or out-of-memory event.
 The generated scenes keep the owl as the visual subject and contain no requested
@@ -100,8 +103,12 @@ earlier image examples.
 
 ## Generated example
 
-![MiniMax H3 VSA 4-step OWL-XPU example on B580](assets/minimax-h3-vsa-4step-owl-b580.png)
+![MiniMax H3 VSA 4-step OWL-XPU animation on B580](assets/minimax-h3-vsa-4step-owl-b580.gif)
+
+[Download the full B580 MP4](assets/minimax-h3-vsa-4step-owl-b580.mp4).
 
 ### PTL-H
 
-![MiniMax H3 VSA 4-step OWL-XPU example on PTL-H](assets/minimax-h3-vsa-4step-owl-ptl-h.png)
+![MiniMax H3 VSA 4-step OWL-XPU animation on PTL-H](assets/minimax-h3-vsa-4step-owl-ptl-h.gif)
+
+[Download the full PTL-H MP4](assets/minimax-h3-vsa-4step-owl-ptl-h.mp4).
