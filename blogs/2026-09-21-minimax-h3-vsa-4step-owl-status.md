@@ -81,6 +81,17 @@ PTL-H, the warm-up completed in 766.025 seconds of server execution time
 time). The timed values are the ComfyUI `execution_start` to
 `execution_success` intervals after warm-up.
 
+Both formal submissions used the same workflow, prompt and timed seed
+`556589502035085`; the runner writes that value to the workflow's
+`105:15.noise_seed` input. The committed workflow default is the warm-up seed
+`556589502035084`. A shared initial noise seed does not imply pixel-identical
+cross-device video: B580 used the experimental BMG D128 CUTE attention route
+and loaded the H3 segmented RMS adapter, while PTL-H used its PTL CUTE route and
+skipped the unavailable native H3 RMS and complete Sol VSA adapters. Different
+compiled kernels, floating-point accumulation and model routes amplify small
+differences over four diffusion steps, so these are same-seed functional records
+rather than a bit-for-bit reproducibility test.
+
 | Device | Package and startup | Warm generation | Output SHA256 | Sample | Route and notes |
 | --- | --- | ---: | --- | --- | --- |
 | B580 / `bmg` | `owl-xpu:comfyui-0.37.0-bmg-h3`<br>`--enable-dynamic-vram --reserve-vram 4` | **220.362 s** server / 220.521 s client | `05b9bfebc95e70b5f2726f17598f86e73fd28749c2c5d0d99fa7cf32d148a92c` | [GIF preview](assets/minimax-h3-vsa-4step-owl-b580.gif) · [MP4](assets/minimax-h3-vsa-4step-owl-b580.mp4) | H3 segmented RMS modulation and H3 sigma-shift adapters loaded. Main H3 attention used the experimental BMG D128 CUTE route (`heads=56`, `q=335`, `kv=335`); VAE decode logged the existing batch-4, sequence-1797 fallback. |
