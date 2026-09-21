@@ -61,19 +61,20 @@ Neither receipt establishes all CuTe/Sol-Attn routes or performance acceptance.
 
 Linux has `bmg` and `ptl-h` CuTe AOT paths. DG2 is declared as a core-only
 target; its CuTe and LGRF sidecars are excluded because the DG2 compiler path is
-unavailable. LNL is not declared. Windows CuTe is opt-in
-(`OMNI_XPU_REQUIRE_CUTE=1`) and explicitly restricted to `bmg`. New OS/device
-combinations require their own evidence.
+unavailable. LNL is now declared as an experimental target, but no Ubuntu LNL
+device receipt exists. Windows CuTe is opt-in (`OMNI_XPU_REQUIRE_CUTE=1`) and
+has an experimental `lnl` path alongside `bmg`; new OS/device combinations
+still require their own evidence.
 
 - [Kernel target metadata](../components/omni_xpu_kernels/omni_xpu_kernel/_version.py)
   lists the target package contract; [setup.py](../components/omni_xpu_kernels/setup.py)
-  declares DG2 core-only extension selection and contains the Windows CuTe restriction. The
+  declares DG2 core-only extension selection and the experimental Windows LNL CuTe path. The
   [kernel policy](../components/omni_xpu_kernels/omni_xpu_kernel/policies/kernel-policy-v1.json)
   retains experimental B580 status.
 - [Kitchen provider builder](../components/comfy-kitchen/packaging/xpu_runtime_provider/build_wheel.py)
-  admits Linux/Windows and `bmg`, `ptl-h`, `dg2`. Capability/shape gates still apply.
+  admits Linux/Windows and `bmg`, `ptl-h`, `dg2`, `lnl`. Capability/shape gates still apply.
 - [AIMDO provider builder](../components/comfy-aimdo/packaging/xpu_runtime_provider/build_wheel.py)
-  has the same platform/target metadata and defaults to native hook on both OSes.
+  has the same platform/target metadata, including experimental `lnl`, and defaults to native hook on both OSes.
   [Windows build scripts](../components/comfy-aimdo/scripts/build-windows-xpu.cmd)
   and Detours support are component implementation evidence, not OWL device acceptance.
 - [Adapter bootstrap](../components/ComfyUI_OmniXPU/runtime_bootstrap.py) checks
@@ -84,6 +85,8 @@ combinations require their own evidence.
 - [Ubuntu/DG2 focused receipt](dg2-validation.md) records the DG2 wheel,
   provider/bootstrap diagnostics and one exact 1024×1024 Z-Image Turbo INT8
   ComfyUI graph with the INT8 FFN route exercised.
+- [Windows LNL integration profile](windows-lnl-integration.md) records the experimental
+  profile and its validation boundary; it is not a combined device receipt.
 - [Ubuntu/PTL-H focused receipt](ptl-h-validation.md) records the PTL-H
   core/LGRF/CUTE smoke checks, provider image and one exact 1024×1024 Z-Image
   Turbo INT8 graph with CUTE attention and fused INT8 ConvRot FFN routes
