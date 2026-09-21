@@ -8,14 +8,14 @@ different.
 ## Workflow and prompt
 
 - Workflow: [`zimage-turbo-int8-owl-api.json`](../workflows/zimage-turbo-int8-owl-api.json)
-- Workflow SHA256: `27e651c61e8f9773c1337118e67d1b188d80a2830d4a06a585ab7d24e4d7b604`
+- Workflow SHA256: `7896c25bfade693531e624734c463ed2e643c393f909aabf6bbf6103f609de25`
 - Resolution: 1024×1024, batch 1
 - Sampler: `res_multistep`, 8 steps, CFG 1
 - Models: `z_image_turbo_int8_convrot.safetensors`, `qwen_3_4b.safetensors` and `ae.safetensors`
 
 The exact prompt is:
 
-> A high-detail editorial illustration of an OWL-XPU optimization laboratory: a wise white owl perched on a glowing Intel XPU board, surrounded by holographic ComfyUI workflow nodes, kernel traces, and a clean open-source engineering notebook, blue and gold light, precise technical atmosphere, cinematic composition
+> A square editorial technology poster in a cinematic 3D-rendered style: a white Eurasian eagle-owl stands centered and full-body on a glowing blue Intel XPU development board in a dark modern laboratory. The owl faces the viewer with calm alert eyes; brushed metal traces and cool blue light surround its talons. Across the upper third, a single wide frosted-glass title panel contains the exact uppercase text "OWL-XPU" in large bold white sans-serif letters. Directly below it, the same panel contains the exact uppercase text "Z IMAGE TURBO" in smaller bold white sans-serif letters. On the front-right edge of the board, one compact illuminated badge contains the exact uppercase text "INT8". All other screens and panels are blank or show only simple geometric blue lines with no legible writing. The background is softly defocused, with blue and gold rim light, detailed white feathers, clean negative space around the title, and a balanced centered composition. The overall image is precise, restrained, and suitable for a technical project cover.
 
 The model files were the same on all three hosts:
 
@@ -25,8 +25,9 @@ The model files were the same on all three hosts:
 | `qwen_3_4b.safetensors` | 8,044,982,048 bytes | `6c671498573ac2f7a5501502ccce8d2b08ea6ca2f661c458e708f36b36edfc5a` |
 | `ae.safetensors` | 335,304,388 bytes | `afc8e28272cd15db3919bacdb6918ce9c1ed22e96cb12c4d5ed0fba823529e38` |
 
-The package assembly used ComfyUI v0.35.0 and the pinned OWL component commits
-listed in the root support matrix. Each run used the same container command
+The package assembly used ComfyUI v0.37.0, frontend 1.52.7, workflow templates
+0.11.66 and the pinned OWL component commits listed in the root support matrix.
+Each run used the same container command
 shape, `--disable-dynamic-vram` and `--disable-api-nodes`; target-specific device
 mappings are omitted from the abbreviated command below:
 
@@ -45,9 +46,9 @@ loading and does not include the HTTP client's polling overhead.
 
 | Device | OWL image and identity | Memory mode | Warm generation | Output SHA256 | Sample | Route and notes |
 | --- | --- | --- | ---: | --- | --- | --- |
-| B580 / `bmg` | `owl-xpu:comfyui-0.35.0-bmg`<br>`sha256:63bff5fa9816c993ccbaaaeeb480aae44e8082b2e39b5b6bb7677abfe7603a15` | `--disable-dynamic-vram` | **4.576 s** | `b89b935af7515a351a2caa750b7b58e7c33cd7b5a1ba34eedefc283f48a04bc0` | [PNG](assets/zimage-turbo-int8-owl-b580.png) | CUTE attention and INT8 FFN paths completed with resident weights. The default DynamicVRAM attempt hit an AIMDO `vbar_fault`; the same resident, DynamicVRAM-off path completed. |
-| A770 / `dg2` | `owl-xpu:comfyui-0.35.0-dg2-current`<br>`sha256:a1242bb72c1275bd24905a0673420a61b2b4b23eed3f0361c58fbc283ea4aac9` | `--disable-dynamic-vram` | **7.810 s** | `f8713de8c83f69da063d95c82df6e97afc1a2bddcab39d21ca54ea48a6901aed` | [PNG](assets/zimage-turbo-int8-owl-dg2.png) | Current canonical DG2 core-only image. CuTe/LGRF is absent by design, so attention uses PyTorch SDPA; the INT8 FFN adapter completed. |
-| PTL-H / Arc B390 | `owl-xpu:comfyui-0.35.0-ptl-h`<br>`sha256:951b8b14b47cc0e621dedd68836b71f3bd84df3f99e45821fbaff5a4b3703adb` | `--disable-dynamic-vram` | **12.412 s** | `9a10a6b318e86e6841af8c3519849317b3edd3059dab5199b7832f3f3c231db9` | [PNG](assets/zimage-turbo-int8-owl-ptl-h.png) | Resident weights, CUTE attention and fused INT8 FFN adapters completed without an execution error. |
+| B580 / `bmg` | `owl-xpu:comfyui-0.37.0-bmg-qwen21`<br>`sha256:a4fbf734c75103463bd460fe5f9361cf29ba44ec75ee407e951acb3eb95aa89f` | `--disable-dynamic-vram` | **4.664 s** | `97e9a51f5dda20f827b745fc44cb0a650f1b97c06108708f00870fd9a77100c3` | [PNG](assets/zimage-turbo-int8-owl-b580.png) | CUTE attention and INT8 FFN paths completed with resident weights. |
+| A770 / `dg2` | `owl-xpu:comfyui-0.37.0-dg2-qwen21`<br>`sha256:1762c8745dce5a68a3957d06016886633a155bd8055d564f8428c531f507be20` | `--disable-dynamic-vram` | **7.987 s** | `1b9eb31a84847e65db6a07a99c44bf3d5665c4abf5691bb6fdd13a06370a73f8` | [PNG](assets/zimage-turbo-int8-owl-dg2.png) | Current DG2 core-only profile. CuTe/LGRF is absent by design, so attention uses PyTorch SDPA; the INT8 FFN adapter completed. |
+| PTL-H / Arc B390 | `owl-xpu:comfyui-0.37.0-ptl-h-qwen21`<br>`sha256:7e0fd3ad08b35127483ace91fa91db39a1c7a3209ac3d12cf250ebea706e3a07` | `--disable-dynamic-vram` | **12.703 s** | `e2e6d134aa89272c4921bdc4567ed66736dcb551135da9052cd2a85f61030a0f` | [PNG](assets/zimage-turbo-int8-owl-ptl-h.png) | Resident weights, CUTE attention and fused INT8 FFN adapters completed without an execution error. |
 
 These are functional warm-execution records, not a cross-device performance
 benchmark. All three runs used resident weights with DynamicVRAM disabled; the
@@ -74,6 +75,6 @@ image-generation workflows when the resident model fits. This avoids introducing
 allocator/offload behavior into the normal path, and all three examples above
 completed with DynamicVRAM disabled. For workflows with materially larger memory
 pressure, such as MiniMax H3, enable DynamicVRAM explicitly and validate that
-workflow on the target device. The B580 result is a concrete reason to keep this
-choice per workflow and per target: its default DynamicVRAM attempt failed with
-an AIMDO VBAR fault, while the same resident, DynamicVRAM-off path succeeded.
+workflow on the target device. The earlier B580 DynamicVRAM attempt in the
+0.35.0 validation hit an AIMDO VBAR fault; the current resident,
+DynamicVRAM-off path succeeds.

@@ -58,7 +58,7 @@ The common startup configuration for both workflows on all devices was:
 | --- | --- | --- | --- |
 | Device | B580 / `bmg` | A770 / `dg2` | PTL-H / Arc B390 |
 | Example image | <img src="blogs/assets/zimage-turbo-int8-owl-b580.png" alt="B580 OWL-XPU example" width="256"> | <img src="blogs/assets/zimage-turbo-int8-owl-dg2.png" alt="DG2 OWL-XPU example" width="256"> | <img src="blogs/assets/zimage-turbo-int8-owl-ptl-h.png" alt="PTL-H OWL-XPU example" width="256"> |
-| Generation time | **4.576 s** | **7.810 s** | **12.412 s** |
+| Generation time | **4.664 s** | **7.987 s** | **12.703 s** |
 
 These values are functional warm-generation records rather than a normalized
 performance benchmark: all three use the same DynamicVRAM-off resident startup,

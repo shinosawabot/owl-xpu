@@ -34,7 +34,7 @@ mounted from a ComfyUI model directory at run time; they are never checked into
 this repository.
 
 The OWL-focused variant has SHA256
-`27e651c61e8f9773c1337118e67d1b188d80a2830d4a06a585ab7d24e4d7b604`. It uses
+`7896c25bfade693531e624734c463ed2e643c393f909aabf6bbf6103f609de25`. It uses
 the same graph settings and model filenames as the catalog graph; only the text
 prompt differs. Its exact prompt, package identities, warm execution method and
 sample images are recorded in the [OWL status record](../blogs/2026-09-21-zimage-turbo-int8-owl-status.md).
