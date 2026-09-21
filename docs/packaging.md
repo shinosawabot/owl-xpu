@@ -1,8 +1,9 @@
-# Linux development packaging
+# Development packaging
 
-For installation and compilation starting from a clean OMIX base, use the
+For Linux installation and compilation starting from a clean OMIX base, use the
 [container recipe](omix-container.md) and its [validation report](omix-validation.md).
-The instructions below cover enhancement-only builds in an existing toolchain.
+The instructions below cover enhancement-only builds in an existing toolchain;
+the Windows LNL profile is described separately below.
 
 The BMG profile is `packaging/profiles/bmg-torch213.json`: Torch
 `2.13.0+xpu`, oneDNN packages `2026.0.0`, target `bmg`, and sycl-tla commit
@@ -12,10 +13,13 @@ sets `xpu_target` to `dg2`, and sets `require_cute` to `false` because DG2 is a
 core-only build. The PTL-H profile is
 `packaging/profiles/ptl-h-torch213.json`; it selects the same Torch/oneDNN ABI,
 sets `xpu_target` to `ptl-h`, and requires CuTe. BMG and PTL-H therefore use
-the pinned sycl-tla checkout; DG2 intentionally does not. Use a prepared
+the pinned sycl-tla checkout; DG2 intentionally does not. The experimental
+Windows profile is `packaging/profiles/lnl-windows-torch213.json`; it selects
+Torch `2.13.0+xpu`, oneDNN `2026.0.0`, target `lnl`, and requires the same
+pinned sycl-tla revision. Use a prepared
 oneAPI development environment; the initial deployment used compiler 2026.1.0.
 Build inputs include
-Python development headers, Git, a C compiler, `icpx`, Level Zero development
+Python development headers, Git, a C compiler, `icpx`/`icx-cl`, Level Zero development
 libraries, Unified Runtime headers, and Python build tools from the component
 `pyproject.toml` files (including `setuptools-scm` for AIMDO).
 
@@ -51,6 +55,24 @@ python packaging/build.py build \
   --sycl-tla /path/to/pinned/sycl-tla \
   --output dist/ptl-h-torch213
 ```
+
+## Windows LNL experimental profile
+
+Run this profile on Windows with the oneAPI 2026 toolchain, MSVC, the Windows
+SDK, Level Zero headers and Detours available. It uses the `icx-cl` fallback
+when `CXX`/`icpx` is not set and invokes AIMDO's Windows build script:
+
+```powershell
+python packaging/build.py build `
+  --profile packaging/profiles/lnl-windows-torch213.json `
+  --sycl-tla C:\path\to\pinned\sycl-tla `
+  --output dist\lnl-windows-torch213
+```
+
+The profile is an implementation and packaging path. It remains unvalidated
+until a clean artifact manifest, target-local native checks and a ComfyUI
+workflow receipt are recorded. The profile does not change the default branch
+configuration of any submodule.
 
 `--output` must name a new directory. Existing results are never overwritten.
 Use `--components kernels kitchen aimdo comfyui` to select the required subset

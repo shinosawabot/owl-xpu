@@ -26,6 +26,14 @@ def git(root: Path, *args: str) -> str:
     return subprocess.check_output(["git", "-C", str(root), *args], text=True).strip()
 
 
+def source_revision(root: Path) -> str:
+    """Read a Git revision or the immutable marker used by local snapshots."""
+    marker = root / ".owl-source-revision"
+    if marker.is_file():
+        return marker.read_text(encoding="utf-8").strip()
+    return git(root, "rev-parse", "HEAD")
+
+
 def inspect_sources(root: Path = ROOT) -> dict:
     """The committed gitlinks, rather than remote branch heads, own the pins."""
     if git(root, "status", "--porcelain", "--untracked-files=all", "--ignore-submodules=none"):
@@ -74,9 +82,16 @@ def only_wheel(directory: Path) -> Path:
 
 def aimdo_build_environment(env: dict) -> dict:
     """Resolve toolchain headers before starting any expensive native build."""
-    compiler = shutil.which(env.get("CXX", "icpx"), path=env.get("PATH"))
+    compiler = None
+    for candidate in (env.get("CXX", ""), "icpx", "icx-cl"):
+        if candidate:
+            compiler = shutil.which(candidate, path=env.get("PATH"))
+            if compiler:
+                break
     if compiler is None:
-        raise RuntimeError("AIMDO requires the oneAPI C++ compiler (CXX or icpx)")
+        raise RuntimeError(
+            "AIMDO requires the oneAPI C++ compiler (CXX, icpx or icx-cl)"
+        )
     include = Path(compiler).resolve().parent.parent / "include"
     candidates = ([Path(env["UR_INCLUDE_DIR"])] if env.get("UR_INCLUDE_DIR") else
                   [include / "unified-runtime", include,
@@ -103,7 +118,10 @@ def host_identity(root: Path = ROOT) -> dict:
 def build(args: argparse.Namespace, plan: dict) -> None:
     profile = plan["profile"]
     if sys.platform != profile["platform"]:
-        raise RuntimeError("This recipe currently supports Linux only")
+        raise RuntimeError(
+            f"profile {profile.get('profile', '<unnamed>')} targets "
+            f"{profile['platform']}, current host is {sys.platform}"
+        )
     require_cute = profile.get(
         "require_cute", profile["xpu_target"] not in {"dg2"}
     )
@@ -123,9 +141,11 @@ def build(args: argparse.Namespace, plan: dict) -> None:
         if importlib.metadata.version("onednn") != profile["onednn_version"]:
             raise RuntimeError("oneDNN package does not match the selected profile")
         if require_cute:
-            if not args.sycl_tla or git(args.sycl_tla, "rev-parse", "HEAD") != profile["sycl_tla_revision"]:
+            if not args.sycl_tla or source_revision(args.sycl_tla) != profile["sycl_tla_revision"]:
                 raise RuntimeError("Pass --sycl-tla pointing to the pinned sycl-tla checkout")
-            if git(args.sycl_tla, "status", "--porcelain", "--untracked-files=all"):
+            if (args.sycl_tla / ".git").exists() and git(
+                args.sycl_tla, "status", "--porcelain", "--untracked-files=all"
+            ):
                 raise RuntimeError("sycl-tla checkout must be clean")
             env["CUTLASS_SYCL_ROOT"] = str(args.sycl_tla.resolve())
     output = args.output.resolve()
@@ -145,7 +165,15 @@ def build(args: argparse.Namespace, plan: dict) -> None:
         run(["git", "clone", "--no-hardlinks", "--no-checkout", str(source), str(work)], cwd=ROOT, env=env, log=log)
         run(["git", "checkout", "--detach", item["revision"]], cwd=work, env=env, log=log)
         if key == "aimdo":
-            run(["bash", "scripts/build-linux-xpu.sh"], cwd=work, env=env, log=log)
+            if sys.platform == "win32":
+                run(
+                    ["cmd", "/d", "/c", "scripts\\build-windows-xpu.cmd"],
+                    cwd=work,
+                    env=env,
+                    log=log,
+                )
+            else:
+                run(["bash", "scripts/build-linux-xpu.sh"], cwd=work, env=env, log=log)
         wheel_env = env
         if key == "aimdo":
             # The co-installable provider must accept the official host version.

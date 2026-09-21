@@ -94,8 +94,9 @@ CuTe Torch operators. Specialized CuTe APIs have separate shape/layout and
 capability gates (D120, D128, structural D64 and BMG-specific sparse/cross-attention
 routes). A successful test of one entry point does not validate all of them.
 
-Build-target eligibility (`bmg`, `ptl-h`), native ABI compatibility, physical-SKU
-runtime policy and device test results are separate properties. BMG CuTe uses
+Build-target eligibility (`bmg`, `ptl-h`, DG2 core-only and experimental `lnl`), native
+ABI compatibility, physical-SKU runtime policy and device test results are separate
+properties. BMG CuTe uses
 G21/G31 AOT images, while exact Device ID selects runtime policy. B580's policy
 can remain experimental even when a specific CuTe correctness contract passes.
 The oneDNN dependency belongs to `_C`; sycl-tla is the build-time header dependency

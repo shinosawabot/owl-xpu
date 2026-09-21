@@ -126,18 +126,18 @@ OMIX image build.
 | B580 / `bmg` | ✅ Validated, 36 RMSNorm cases and 2 ESIMD SDP dtype cases; experimental B580 policy | ✅ Validated, BF16 D128 Z-Image attention correctness ([receipt](docs/b580-kernel-validation.md)); other CuTe routes/performance not covered | ✅ Validated, 40 capabilities registered; INT8 reference case tested | ✅ Validated, native hook and VBAR lifecycle | ✅ Validated, registration and diagnostic graph; conditional adapters can skip | ✅ Validated, OMIX clean-image receipt plus current Z Image Turbo and Qwen Image 2.1 INT8 workflows ([Z record](blogs/2026-09-21-zimage-turbo-int8-owl-status.md), [Qwen record](blogs/2026-09-21-qwen-image-2.1-int8-owl-status.md)) |
 | A770 / `dg2` | ✅ Validated, core `_C` wheel and ESIMD RMSNorm exercised; LGRF sidecar is intentionally omitted | ❌ Validated — not supported, DG2 CuTe/LGRF AOT is unavailable; ComfyUI uses PyTorch SDPA | ✅ Validated, DG2 XPU provider active and INT8 calls exercised | 📋 Target declared, not separately validated in the focused workflow | ✅ Validated, INT8 FFN adapter and DG2 attention fallback loaded | ✅ Validated, core-only DG2 profile plus current Z Image Turbo and Qwen Image 2.1 INT8 workflows ([historical receipt](docs/dg2-validation.md), [Z record](blogs/2026-09-21-zimage-turbo-int8-owl-status.md), [Qwen record](blogs/2026-09-21-qwen-image-2.1-int8-owl-status.md)) |
 | PTL / `ptl-h` only | ✅ Validated, PTL-H core and LGRF numerical smoke | ✅ Validated, PTL-H CUTE D128 smoke and workflow attention calls | ✅ Validated, PTL-H provider and fused INT8 ConvRot workflow | ✅ Validated, PTL-H provider startup; fused workflow gate uses resident weights | ✅ Validated, PTL-H CUTE, RMSNorm and INT8 FFN adapters | ✅ Validated, PTL-H Torch 2.13 image and current Z Image Turbo plus Qwen Image 2.1 INT8 workflows ([historical receipt](docs/ptl-h-validation.md), [Z record](blogs/2026-09-21-zimage-turbo-int8-owl-status.md), [Qwen record](blogs/2026-09-21-qwen-image-2.1-int8-owl-status.md)) |
-| LNL | 🚫 Missing target support, no `lnl` build target | 🚫 Missing `lnl` CuTe/AOT target | 🚫 Missing target support, no `lnl` provider target | 🚫 Missing target support, no `lnl` provider target | 🧩 Implementation present, unvalidated, generic XPU discovery is not LNL acceptance | 🚫 Blocked on target integration; no receipt |
+| LNL | 🧩 Implementation present, unvalidated, Linux `lnl` target path has no Ubuntu device receipt | 🧩 LNL CuTe/LGRF path present, standalone shapes only; no Ubuntu receipt | 📋 `lnl` provider target declared, Ubuntu package receipt pending | 🧩 LNL provider path present, Ubuntu allocator lifecycle unvalidated | 🧩 Manifest and adapter target checks present, combined Ubuntu workflow pending | ⏳ Experimental LNL path; no Ubuntu package or workflow receipt |
 
 ### Windows
 
-Official Intel portable enhancement; OWL Windows packaging is planned.
+Official Intel portable enhancement; the experimental LNL profile, OWL Windows packaging and device acceptance remain pending.
 
 | GPU / target | SYCL/ESIMD + oneDNN (`_C` / `lgrf_sdp`) | CuTe / sycl-tla (`cute_fmha_torch`) | Kitchen XPU provider | AIMDO XPU provider | ComfyUI_OmniXPU adapters | OWL package / combined validation |
 | --- | --- | --- | --- | --- | --- | --- |
 | B580 / `bmg` | 🧩 Implementation present, unvalidated, Windows BMG build path; existing build guide is scoped to B70, not B580 acceptance | 🧩 BMG CuTe build path; explicit opt-in required; B580 device unvalidated | 📋 Target declared, unvalidated, Windows + `bmg` manifest support | 🧩 Implementation present, unvalidated; Windows native-hook/Detours code and `bmg` eligibility | 🧩 Implementation present, unvalidated, Windows bootstrap path | ⏳ Intel portable enhancement planned; no B580 Windows receipt |
 | A770 / `dg2` | 🚫 Missing target support, no `dg2` build target | 🚫 Missing `dg2` CuTe/AOT target | 📋 Target declared, unvalidated, Windows + `dg2`; matching kernel missing | 🧩 Implementation present, unvalidated; Windows hook code and `dg2` eligibility | 🧩 Implementation present, unvalidated, incomplete companion stack | 🚫 Blocked on DG2 kernel path; no receipt |
 | PTL / `ptl-h` only | 🧩 Implementation present, unvalidated, core `ptl-h` target path | 🚫 Windows CuTe build explicitly restricted to `bmg` | 📋 Target declared, unvalidated, Windows + `ptl-h` | 🧩 Implementation present, unvalidated; Windows hook code and `ptl-h` eligibility | 🧩 Implementation present, unvalidated, device untested | ⏳ Partial source path; no complete portable bundle or receipt |
-| LNL | 🚫 Missing target support, no `lnl` build target | 🚫 Missing `lnl` CuTe/AOT target | 🚫 Missing target support, no `lnl` provider target | 🚫 Missing target support, no `lnl` provider target | 🧩 Implementation present, unvalidated, generic XPU discovery is not LNL acceptance | 🚫 Blocked on target integration; no receipt |
+| LNL | 🧩 Implementation present, unvalidated, Windows `lnl` core/AOT path | 🧩 LNL CuTe/LGRF path present, standalone shapes only; Qwen attention remains on Torch SDPA | 📋 `lnl` provider target declared, clean Windows wheel pending | 🧩 Windows native-hook source path present; allocator lifecycle unvalidated | 🧩 Manifest and adapter target checks present, combined workflow pending | ⏳ `lnl-windows-torch213` profile added; no complete package/workflow receipt |
 
 The two kernel columns follow implementation families within one wheel: `_C`
 provides SYCL/ESIMD and oneDNN operations, with ESIMD SDP delegated to
@@ -184,10 +184,11 @@ does not use. There is no need to download those for this recipe.
 In a prepared Linux development environment with matching Torch XPU, oneAPI and
 oneDNN; the BMG and PTL-H commands also require pinned sycl-tla headers:
 
-All three target profiles use the same Torch/oneDNN packaging interface. BMG
+The Linux target profiles use the same Torch/oneDNN packaging interface. BMG
 and PTL-H require the pinned sycl-tla checkout for CuTe; DG2 is deliberately a
 core-only profile and omits that argument because its profile sets
-`require_cute` to `false`.
+`require_cute` to `false`. The experimental Windows LNL profile uses the same
+component contracts with a Windows host and requires its pinned sycl-tla checkout.
 
 ```bash
 python packaging/build.py build \
@@ -213,6 +214,19 @@ python packaging/build.py build \
   --sycl-tla /path/to/pinned/sycl-tla \
   --output dist/ptl-h-torch213
 ```
+
+For the experimental Windows LNL profile, run the same command on a Windows
+host with the oneAPI, MSVC, Windows SDK and Detours prerequisites:
+
+```powershell
+python packaging/build.py build `
+  --profile packaging/profiles/lnl-windows-torch213.json `
+  --sycl-tla C:\path\to\pinned\sycl-tla `
+  --output dist\lnl-windows-torch213
+```
+
+This produces an experimental package receipt only; it does not establish
+Windows device or workflow acceptance.
 
 The result contains the native kernel wheel, separately packaged Kitchen/AIMDO
 XPU provider wheels, a ComfyUI custom-node ZIP and a SHA256 manifest. Native builds
@@ -252,11 +266,10 @@ route enhances the official Intel portable. The
 compatible ComfyUI upgrades to preserve adapter and component behavior.
 
 This is a submodule-based assembly and a BMG/DG2/PTL-H/Torch 2.13 development
-packaging recipe. The DG2 and PTL-H receipts and workflow records cover the
-validated Z Image Turbo and Qwen Image 2.1 INT8 graphs; they do not establish
-complete model coverage or performance parity. LNL remains a future target
-direction and requires its own
-implementation and device validation.
+packaging recipe with an experimental Windows LNL profile. The DG2 and PTL-H
+receipts and workflow records cover the validated Z Image Turbo and Qwen Image
+2.1 INT8 graphs; they do not establish complete model coverage or performance
+parity. LNL still requires a clean Windows package and device/workflow receipt.
 
 Build and verification evidence is described in the
 [validation report](docs/omix-validation.md).
