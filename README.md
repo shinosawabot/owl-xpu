@@ -77,7 +77,7 @@ prompt and startup configuration as the Z Image record.
 | --- | --- | --- | --- |
 | Device | B580 / `bmg` | A770 / `dg2` | PTL-H / Arc B390 |
 | Example image | <img src="blogs/assets/qwen-image-2.1-int8-owl-b580.png" alt="B580 Qwen Image 2.1 OWL-XPU example" width="256"> | <img src="blogs/assets/qwen-image-2.1-int8-owl-dg2.png" alt="DG2 Qwen Image 2.1 OWL-XPU example" width="256"> | <img src="blogs/assets/qwen-image-2.1-int8-owl-ptl-h.png" alt="PTL-H Qwen Image 2.1 OWL-XPU example" width="256"> |
-| Generation time | **17.373 s** | **27.133 s** | **51.542 s** |
+| Generation time | **17.415 s** | **27.582 s** | **50.322 s** |
 
 These are functional warm-generation records for the 1024×1024, 25-step Euler
 graph. DG2 uses core-only PyTorch SDPA; B580 and PTL-H load CUTE but fall back

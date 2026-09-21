@@ -40,7 +40,7 @@ prompt differs. Its exact prompt, package identities, warm execution method and
 sample images are recorded in the [OWL status record](../blogs/2026-09-21-zimage-turbo-int8-owl-status.md).
 
 The Qwen Image 2.1 OWL workflow has SHA256
-`df566889cca5a3dd54637a9701e33cc4adeeeedddd8f5ed1e51a89795136e9a0`. It uses
+`c792789fb01f509465c733a99fb8646afb8adf10d821686c4e928edc851d2b97`. It uses
 the official INT8 filenames `qwen_image_2.1_int8_convrot.safetensors`,
 `qwen3vl_8b_int8_convrot.safetensors` and `qwen_image_2.1_vae_bf16.safetensors`.
 The graph fixes a 1024×1024 batch-1 latent, Euler/simple sampling with 25 steps,
